@@ -2,24 +2,25 @@ import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { getSettings } from "@/lib/services/settings";
 import { listCategories } from "@/lib/services/catalog";
+import { getI18n } from "@/lib/i18n/server";
 import { Logo } from "./Logo";
+import { LangSwitch } from "./LangSwitch";
 
 export async function Footer() {
-  const [s, cats] = await Promise.all([getSettings(), listCategories()]);
-  const year = new Date().getFullYear();
+  const [s, cats, i] = await Promise.all([getSettings(), listCategories(), getI18n()]);
+  const f = i.d.footer;
+  const year = i.num(String(new Date().getFullYear()));
   const cols = [
-    { title: "Shop", links: [{ href: "/shop", label: "All products" }, ...cats.filter((c) => !c.parentId).slice(0, 5).map((c) => ({ href: `/category/${c.slug}`, label: c.name })), { href: "/offers", label: "Offers" }] },
-    { title: "Account", links: [{ href: "/account", label: "My account" }, { href: "/account/orders", label: "Track orders" }, { href: "/account/wishlist", label: "Wishlist" }, { href: "/cart", label: "Cart" }] },
-    { title: "Help", links: [{ href: "/faq", label: "FAQ" }, { href: "/contact", label: "Contact us" }, { href: "/refund-policy", label: "Refund policy" }, { href: "/terms", label: "Terms" }, { href: "/privacy-policy", label: "Privacy" }, { href: "/about", label: "About us" }] },
+    { title: f.shop, links: [{ href: "/shop", label: f.allProducts }, ...cats.filter((c) => !c.parentId).slice(0, 5).map((c) => ({ href: `/category/${c.slug}`, label: i.name(c) })), { href: "/offers", label: i.d.nav.offers }] },
+    { title: f.account, links: [{ href: "/account", label: f.myAccount }, { href: "/account/orders", label: f.trackOrders }, { href: "/account/wishlist", label: f.wishlist }, { href: "/cart", label: f.cart }] },
+    { title: f.help, links: [{ href: "/faq", label: f.faq }, { href: "/contact", label: f.contact }, { href: "/refund-policy", label: f.refund }, { href: "/terms", label: f.terms }, { href: "/privacy-policy", label: f.privacy }, { href: "/about", label: f.aboutUs }] },
   ];
   return (
-    <footer className="mt-8 bg-brand-900 text-white/80">
+    <footer className="mt-8 bg-brand-900 pb-20 text-white/80 lg:pb-0">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Logo name={s.storeName} tagline={s.tagline} light />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed">
-            Fresh fruits, vegetables and daily groceries delivered to your doorstep. Sourced from local farms, quality-checked every morning.
-          </p>
+          <Logo name={s.storeName} tagline={i.lang === "bn" ? s.taglineBn : s.tagline} light />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed">{f.about}</p>
           <ul className="mt-5 space-y-2 text-sm">
             {s.address && (
               <li className="flex gap-2">
@@ -43,6 +44,7 @@ export async function Footer() {
               </li>
             )}
           </ul>
+          <LangSwitch variant="dark" className="mt-6" />
         </div>
         {cols.map((c) => (
           <div key={c.title}>
@@ -62,10 +64,10 @@ export async function Footer() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs sm:flex-row">
           <p>
-            © {year} {s.storeName}. All rights reserved.
+            © {year} {s.storeName}. {f.rights}
           </p>
           <p className="flex items-center gap-2">
-            We accept <span className="rounded bg-white/10 px-2 py-0.5 font-semibold text-white">Cash on Delivery</span>
+            {f.weAccept} <span className="rounded bg-white/10 px-2 py-0.5 font-semibold text-white">{f.cod}</span>
           </p>
         </div>
       </div>

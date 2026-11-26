@@ -3,8 +3,10 @@
 import { useTransition } from "react";
 import { MapPin } from "lucide-react";
 import { setZoneAction } from "@/app/actions/cart";
+import { useI18n } from "@/lib/i18n/client";
 
 export function ZoneSelector({ zones, currentId, fallback }: { zones: { id: string; name: string }[]; currentId: string | null; fallback: string }) {
+  const { d } = useI18n();
   const [pending, start] = useTransition();
   if (zones.length === 0) return null;
   return (
@@ -12,7 +14,7 @@ export function ZoneSelector({ zones, currentId, fallback }: { zones: { id: stri
       <MapPin className="size-6 shrink-0 fill-leaf-500/15 text-leaf-500" aria-hidden />
       <div className="leading-tight">
         <label htmlFor="zone" className="block text-xs text-ink-600">
-          Deliver to
+          {d.header.deliverTo}
         </label>
         <select
           id="zone"

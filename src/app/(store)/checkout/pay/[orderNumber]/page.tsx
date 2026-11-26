@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { orders } from "@/lib/db/schema";
 import { initiateSslcommerz } from "@/lib/services/payments";
 import { Alert, ButtonLink } from "@/components/ui";
+import { getI18n } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "Payment", robots: { index: false } };
 
@@ -18,12 +19,13 @@ export default async function PayPage({ params }: { params: Promise<{ orderNumbe
   if (order.paymentMethod !== "sslcommerz" || order.status === "cancelled") redirect(`/account/orders/${order.id}`);
   const res = await initiateSslcommerz(order);
   if ("url" in res) redirect(res.url);
+  const i = await getI18n();
   return (
     <div className="container-page max-w-xl py-16">
-      <Alert tone="error">{res.error}</Alert>
+      <Alert tone="error">{i.msg(res.error)}</Alert>
       <div className="mt-6 flex gap-3">
-        <ButtonLink href={`/account/orders/${order.id}`}>View order</ButtonLink>
-        <ButtonLink href="/contact" variant="secondary">Contact support</ButtonLink>
+        <ButtonLink href={`/account/orders/${order.id}`}>{i.d.checkout.viewOrder}</ButtonLink>
+        <ButtonLink href="/contact" variant="secondary">{i.d.checkout.contactSupport}</ButtonLink>
       </div>
     </div>
   );

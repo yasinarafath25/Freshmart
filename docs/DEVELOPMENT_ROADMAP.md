@@ -121,4 +121,6 @@ Updated at the end of each work session — see README "Project status" for the 
 | 13 Testing | 🟡 unit tests + route smoke test + manual browser journeys; no automated E2E suite |
 | 14 Deployment | 🟡 config & guide ready; Workers build must run in WSL/CI (Windows symlink limit) |
 
+| 15 Bilingual UI & usability | ✅ English/Bangla storefront, Bangla catalog fields, mobile bottom nav, toasts, search suggestions |
+
 Changes found during implementation (kept in sync with TRD): store time zone setting (`timeZone`) for delivery dates, order numbers and reports; `SESSION_SECRET` dropped (sessions need no signing key); `pg` bundled rather than externalised.

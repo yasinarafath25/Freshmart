@@ -6,6 +6,7 @@ import { categories, productVariants, products, reviews, users, wishlistItems } 
 export type ProductCardData = {
   id: string;
   name: string;
+  nameBn: string | null;
   slug: string;
   unit: string;
   image: string | null;
@@ -22,6 +23,7 @@ export type ProductCardData = {
   stock: number;
   variantCount: number;
   categoryName: string | null;
+  categoryNameBn: string | null;
 };
 
 export type SortKey = "popular" | "newest" | "price_asc" | "price_desc" | "name";
@@ -53,12 +55,14 @@ function filterWhere(f: ProductFilters): SQL | undefined {
     conds.push(
       or(
         ilike(products.name, term),
+        ilike(products.nameBn, term),
+        ilike(products.descriptionBn, term),
         ilike(products.description, term),
         exists(
           getDb()
             .select({ x: sql`1` })
             .from(categories)
-            .where(and(eq(categories.id, products.categoryId), ilike(categories.name, term))),
+            .where(and(eq(categories.id, products.categoryId), or(ilike(categories.name, term), ilike(categories.nameBn, term)))),
         ),
       ),
     );
@@ -104,13 +108,19 @@ function orderBy(sort: SortKey = "popular") {
   }
 }
 
+/** For searches: products whose own name matches rank above category/description matches. */
+function nameMatchFirst(q: string) {
+  const term = `%${q.replace(/[%_\\]/g, (m) => "\\" + m)}%`;
+  return sql`case when ${products.name} ilike ${term} or ${products.nameBn} ilike ${term} then 0 else 1 end`;
+}
+
 async function hydrateCards(rows: { id: string }[]): Promise<ProductCardData[]> {
   if (rows.length === 0) return [];
   const db = getDb();
   const ids = rows.map((r) => r.id);
   const [prods, variants] = await Promise.all([
     db
-      .select({ p: products, categoryName: categories.name })
+      .select({ p: products, categoryName: categories.name, categoryNameBn: categories.nameBn })
       .from(products)
       .leftJoin(categories, eq(categories.id, products.categoryId))
       .where(inArray(products.id, ids)),
@@ -131,6 +141,7 @@ async function hydrateCards(rows: { id: string }[]): Promise<ProductCardData[]> 
       return {
         id,
         name: r.p.name,
+        nameBn: r.p.nameBn,
         slug: r.p.slug,
         unit: r.p.unit,
         image: r.p.images[0] ?? null,
@@ -147,6 +158,7 @@ async function hydrateCards(rows: { id: string }[]): Promise<ProductCardData[]> 
         stock: vs.reduce((s, v) => s + v.stock, 0),
         variantCount: vs.length,
         categoryName: r.categoryName,
+        categoryNameBn: r.categoryNameBn,
       };
     })
     .filter((x): x is ProductCardData => x !== null);
@@ -162,7 +174,7 @@ export async function listProducts(f: ProductFilters = {}) {
       .select({ id: products.id })
       .from(products)
       .where(where)
-      .orderBy(...orderBy(f.sort))
+      .orderBy(...(f.q ? [nameMatchFirst(f.q), ...orderBy(f.sort)] : orderBy(f.sort)))
       .limit(perPage)
       .offset((page - 1) * perPage),
     db.select({ n: sql<number>`count(*)::int` }).from(products).where(where),
@@ -238,6 +250,7 @@ export async function getTestimonials(limit = 3) {
       body: reviews.body,
       userName: users.name,
       productName: products.name,
+      productNameBn: products.nameBn,
       productSlug: products.slug,
     })
     .from(reviews)

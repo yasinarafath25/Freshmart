@@ -19,8 +19,10 @@ function ZoneFields({ z, cur }: { z?: DeliveryZone; cur: string }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {z && <input type="hidden" name="id" value={z.id} />}
-      <AField name="name" label="Area name" defaultValue={z?.name} required />
-      <AField name="etaText" label="Delivery time text" defaultValue={z?.etaText ?? "Same day"} required />
+      <AField name="name" label="Area name (English)" defaultValue={z?.name} required />
+      <AField name="nameBn" label="এলাকার নাম (বাংলা)" lang="bn" defaultValue={z?.nameBn ?? ""} />
+      <AField name="etaText" label="Delivery time text (English)" defaultValue={z?.etaText ?? "Same day"} required />
+      <AField name="etaTextBn" label="ডেলিভারির সময় (বাংলা)" lang="bn" defaultValue={z?.etaTextBn ?? ""} />
       <AField name="fee" label={`Delivery fee (${cur})`} type="number" min={0} step="0.01" defaultValue={major(z?.fee ?? 0)} required />
       <AField name="freeAbove" label={`Free above (${cur})`} type="number" min={0} step="0.01" defaultValue={major(z?.freeAbove)} hint="Empty = store default" />
       <AField name="sortOrder" label="Sort order" type="number" min={0} defaultValue={String(z?.sortOrder ?? 0)} />

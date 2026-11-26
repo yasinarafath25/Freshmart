@@ -10,8 +10,10 @@ type V = { id?: string; name: string; sku: string; price: string; compareAtPrice
 export type ProductFormValues = {
   id?: string;
   name: string;
+  nameBn: string;
   slug: string;
   description: string;
+  descriptionBn: string;
   categoryId: string | null;
   unit: string;
   origin: string;
@@ -56,9 +58,13 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
         {state?.message && <Alert tone={state.ok ? "success" : "error"}>{state.message}</Alert>}
         <Card className="space-y-4 p-6">
           <h2 className="font-semibold">Basic information</h2>
-          <Field label="Product name" htmlFor="name" error={e.name}><Input id="name" name="name" defaultValue={initial.name} required error={e.name} /></Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Product name (English)" htmlFor="name" error={e.name}><Input id="name" name="name" defaultValue={initial.name} required error={e.name} /></Field>
+            <Field label="পণ্যের নাম (বাংলা)" htmlFor="nameBn" error={e.nameBn} hint="Shown when the shop is in Bangla"><Input id="nameBn" name="nameBn" lang="bn" defaultValue={initial.nameBn} error={e.nameBn} /></Field>
+          </div>
           <Field label="URL slug" htmlFor="slug" error={e.slug} hint="Leave empty to generate from the name."><Input id="slug" name="slug" defaultValue={initial.slug} error={e.slug} /></Field>
-          <Field label="Description" htmlFor="description" error={e.description}><Textarea id="description" name="description" defaultValue={initial.description} className="min-h-32" /></Field>
+          <Field label="Description (English)" htmlFor="description" error={e.description}><Textarea id="description" name="description" defaultValue={initial.description} className="min-h-28" /></Field>
+          <Field label="বিবরণ (বাংলা)" htmlFor="descriptionBn" error={e.descriptionBn}><Textarea id="descriptionBn" name="descriptionBn" lang="bn" defaultValue={initial.descriptionBn} className="min-h-28" /></Field>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Origin" htmlFor="origin"><Input id="origin" name="origin" defaultValue={initial.origin} placeholder="e.g. Local farms" /></Field>
             <Field label="Freshness badge" htmlFor="freshnessLabel" hint="Shown on the card, e.g. Fresh, Organic, Seasonal"><Input id="freshnessLabel" name="freshnessLabel" defaultValue={initial.freshnessLabel} /></Field>

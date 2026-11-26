@@ -11,16 +11,16 @@ import { and, eq } from "drizzle-orm";
 const uuid = z.string().uuid();
 const qty = z.coerce.number().int().min(0).max(MAX_LINE_QTY);
 
-export type CartActionResult = { ok: boolean; message?: string };
+export type CartActionResult = { ok: boolean; code: "added" | "capped" | "unavailable" | "soldout" | "invalid"; quantity?: number };
 
 export async function addToCartAction(variantId: string, quantity = 1): Promise<CartActionResult> {
   const v = uuid.safeParse(variantId);
   const q = qty.safeParse(quantity);
-  if (!v.success || !q.success || q.data < 1) return { ok: false, message: "Invalid item." };
+  if (!v.success || !q.success || q.data < 1) return { ok: false, code: "invalid" };
   const res = await addToCart(v.data, q.data);
-  if (!res.ok) return { ok: false, message: res.error };
+  if (!res.ok) return { ok: false, code: res.error.includes("out of stock") ? "soldout" : "unavailable" };
   revalidatePath("/", "layout");
-  return { ok: true, message: res.capped ? `Only ${res.quantity} available — cart updated.` : "Added to cart" };
+  return { ok: true, code: res.capped ? "capped" : "added", quantity: res.quantity };
 }
 
 export async function updateCartItemAction(formData: FormData) {

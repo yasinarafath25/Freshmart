@@ -8,6 +8,7 @@ import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 import * as s from "../src/lib/db/schema";
 import { hashPassword } from "../src/lib/auth/password";
+import { CATEGORY_BN, PRODUCT_BN, SETTINGS_BN, ZONE_BN } from "./seed-bn";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle({ client: pool, schema: s });
@@ -200,6 +201,26 @@ async function main() {
   } else {
     console.log("SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD not set — skipping admin user. Use `npm run admin:create`.");
   }
+  // Bangla translations — fill only empty fields so admin edits are kept.
+  let bnFilled = 0;
+  for (const [slug, v] of Object.entries(CATEGORY_BN)) {
+    const r = await db.update(s.categories).set({ nameBn: sql`coalesce(${s.categories.nameBn}, ${v.name})`, descriptionBn: sql`coalesce(${s.categories.descriptionBn}, ${v.description})` }).where(eq(s.categories.slug, slug)).returning({ id: s.categories.id });
+    bnFilled += r.length;
+  }
+  for (const [name, v] of Object.entries(ZONE_BN)) {
+    await db.update(s.deliveryZones).set({ nameBn: sql`coalesce(${s.deliveryZones.nameBn}, ${v.name})`, etaTextBn: sql`coalesce(${s.deliveryZones.etaTextBn}, ${v.eta})` }).where(eq(s.deliveryZones.name, name));
+  }
+  for (const [name, v] of Object.entries(PRODUCT_BN)) {
+    const r = await db.update(s.products).set({ nameBn: sql`coalesce(${s.products.nameBn}, ${v.name})`, descriptionBn: sql`coalesce(${s.products.descriptionBn}, ${v.description})` }).where(eq(s.products.name, name)).returning({ id: s.products.id });
+    bnFilled += r.length;
+  }
+  const storeRow = await db.query.settings.findFirst({ where: eq(s.settings.key, "store") });
+  const store = (storeRow?.value ?? {}) as Record<string, unknown>;
+  if (!store.taglineBn || !store.announcementsBn) {
+    await db.update(s.settings).set({ value: { ...SETTINGS_BN, ...store } }).where(eq(s.settings.key, "store"));
+  }
+  console.log(`Bangla text filled for ${bnFilled} categories/products`);
+
   console.log(`Seed complete. Products created: ${created}, photos applied to existing: ${photosApplied}`);
   await pool.end();
 }

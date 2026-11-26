@@ -20,10 +20,12 @@ export default async function SettingsPage() {
         <Card className="grid gap-4 p-6 sm:grid-cols-2">
           <h2 className="font-semibold sm:col-span-2">Brand</h2>
           <AField name="storeName" label="Store name" defaultValue={s.storeName} required />
-          <AField name="tagline" label="Tagline" defaultValue={s.tagline} />
+          <AField name="tagline" label="Tagline (English)" defaultValue={s.tagline} />
+          <AField name="taglineBn" label="ট্যাগলাইন (বাংলা)" lang="bn" defaultValue={s.taglineBn} />
           <AField name="currencySymbol" label="Currency symbol" defaultValue={s.currencySymbol} required hint="e.g. ৳ or ₹" />
           <AField name="currencyCode" label="Currency code (ISO)" defaultValue={s.currencyCode} required maxLength={3} hint="e.g. BDT or INR — sent to the payment gateway" />
-          <ATextarea name="announcements" label="Announcement bar (one per line, max 3)" defaultValue={s.announcements.join("\n")} className="sm:col-span-2" />
+          <ATextarea name="announcements" label="Announcement bar — English (one per line, max 3)" defaultValue={s.announcements.join("\n")} className="sm:col-span-2" />
+          <ATextarea name="announcementsBn" label="ঘোষণা বার — বাংলা (প্রতি লাইনে একটি, সর্বোচ্চ ৩টি)" lang="bn" defaultValue={s.announcementsBn.join("\n")} className="sm:col-span-2" />
         </Card>
         <Card className="grid gap-4 p-6 sm:grid-cols-2">
           <h2 className="font-semibold sm:col-span-2">Contact</h2>

@@ -72,11 +72,13 @@ export type CartLine = {
   variantId: string;
   productId: string;
   productName: string;
+  productNameBn: string | null;
   productSlug: string;
   variantName: string;
   unit: string;
   image: string | null;
   categoryName: string | null;
+  categoryNameBn: string | null;
   unitPrice: number;
   compareAtPrice: number | null;
   quantity: number;
@@ -94,12 +96,14 @@ export async function loadCartLines(db: DB, cartId: string): Promise<CartLine[]>
       p: {
         id: products.id,
         name: products.name,
+        nameBn: products.nameBn,
         slug: products.slug,
         unit: products.unit,
         images: products.images,
         isActive: products.isActive,
       },
       categoryName: categories.name,
+      categoryNameBn: categories.nameBn,
     })
     .from(cartItems)
     .innerJoin(productVariants, eq(productVariants.id, cartItems.variantId))
@@ -118,11 +122,13 @@ export async function loadCartLines(db: DB, cartId: string): Promise<CartLine[]>
       variantId: r.v.id,
       productId: r.p.id,
       productName: r.p.name,
+      productNameBn: r.p.nameBn,
       productSlug: r.p.slug,
       variantName: r.v.name,
       unit: r.p.unit,
       image: r.p.images[0] ?? null,
       categoryName: r.categoryName,
+      categoryNameBn: r.categoryNameBn,
       unitPrice: r.v.price,
       compareAtPrice: r.v.compareAtPrice,
       quantity: r.quantity,

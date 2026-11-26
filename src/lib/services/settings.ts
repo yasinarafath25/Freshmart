@@ -9,6 +9,7 @@ import { isValidTimeZone } from "@/lib/utils/dates";
 export const storeSettingsSchema = z.object({
   storeName: z.string().min(1).max(60).default("FreshMart"),
   tagline: z.string().max(80).default("Eat Fresh, Live Healthy"),
+  taglineBn: z.string().max(80).default("তাজা খান, সুস্থ থাকুন"),
   currencySymbol: z.string().min(1).max(4).default("৳"),
   currencyCode: z.string().length(3).default("BDT"),
   supportPhone: z.string().max(30).default(""),
@@ -24,6 +25,9 @@ export const storeSettingsSchema = z.object({
   announcements: z
     .array(z.string().max(80))
     .default(["Free Home Delivery on orders ৳999+", "100% Fresh Guarantee", "24/7 Customer Support"]),
+  announcementsBn: z
+    .array(z.string().max(80))
+    .default(["৳৯৯৯-এর বেশি অর্ডারে ফ্রি হোম ডেলিভারি", "১০০% তাজা থাকার নিশ্চয়তা", "২৪/৭ গ্রাহক সহায়তা"]),
   socialFacebook: z.string().max(200).default(""),
   socialInstagram: z.string().max(200).default(""),
 });

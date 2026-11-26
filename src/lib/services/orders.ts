@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { getDb, type DB } from "@/lib/db/client";
 import {
   cartItems,
@@ -180,6 +180,7 @@ export async function placeOrder(input: PlaceOrderInput) {
         productId: l.productId,
         variantId: l.variantId,
         productName: l.productName,
+        productNameBn: l.productNameBn,
         variantName: l.variantName,
         unit: l.unit,
         image: l.image,
@@ -227,7 +228,12 @@ export async function getOrderByNumberForUser(orderNumber: string, userId: strin
 export async function loadOrderDetail(order: typeof orders.$inferSelect) {
   const db = getDb();
   const [items, history, pays] = await Promise.all([
-    db.select().from(orderItems).where(eq(orderItems.orderId, order.id)),
+    // Older orders have no Bangla snapshot; fall back to the product's current Bangla name.
+    db
+      .select({ ...getTableColumns(orderItems), productNameBn: sql<string | null>`coalesce(${orderItems.productNameBn}, ${products.nameBn})` })
+      .from(orderItems)
+      .leftJoin(products, eq(products.id, orderItems.productId))
+      .where(eq(orderItems.orderId, order.id)),
     db.select().from(orderStatusHistory).where(eq(orderStatusHistory.orderId, order.id)).orderBy(asc(orderStatusHistory.createdAt)),
     db.select().from(payments).where(eq(payments.orderId, order.id)).orderBy(desc(payments.createdAt)),
   ]);

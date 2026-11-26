@@ -213,6 +213,17 @@ Headers set in `next.config.ts`: CSP, HSTS (prod), `X-Content-Type-Options`, `Re
 | `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD`, `SSLCOMMERZ_SANDBOX` | optional | Enables online payment |
 | `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | seed only | First super-admin; never committed |
 
+## 15a. Languages (English & Bangla)
+
+- **Approach:** cookie-based locale (`fm_lang` = `en` | `bn`); first visit falls back to the browser's `Accept-Language` (Bangla if it starts with `bn`), else English. URLs are the same in both languages.
+- **UI text:** typed dictionaries in `src/lib/i18n/dict.ts` (`bn` must contain every `en` key — enforced by TypeScript and a unit test). Server Components use `getI18n()`; Client Components use `useI18n()`.
+- **Catalog text:** `name_bn` / `description_bn` columns on products and categories, `name_bn` / `eta_text_bn` on delivery zones, `product_name_bn` snapshot on order items; `taglineBn` / `announcementsBn` in settings. Empty Bangla fields fall back to English.
+- **Numbers & units:** Bengali digits for prices/quantities/dates in Bangla mode; variant labels ("1 kg", "500 g", "1 bunch") and delivery slots are translated for display; stored values stay English. Order numbers keep Latin digits.
+- **Server messages:** validation/action/service messages stay English in code; `src/lib/i18n/messages.ts` translates them where customers see them.
+- **Font:** Hind Siliguri (Google Fonts via `next/font`, self-hosted at build) is in the font stack after Inter/Poppins, so Bengali glyphs render consistently.
+- **Admin:** stays in English; admin forms have Bangla fields for content.
+- **Trade-off:** one URL per page means search engines index the default (English) version. P2: locale-prefixed URLs (`/bn/...`) with `hreflang` if Bangla SEO becomes a priority.
+
 ## 16. Third-party integrations
 
 | Service | Status | Notes |

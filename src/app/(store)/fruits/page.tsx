@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { CategoryContent } from "@/components/store/CategoryContent";
 import type { SearchParams } from "@/components/store/CatalogView";
+import { getI18n } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Fruits", alternates: { canonical: "/fruits" } };
+export async function generateMetadata(): Promise<Metadata> {
+  const { d } = await getI18n();
+  return { title: d.nav.fruits, alternates: { canonical: "/fruits" } };
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<SearchParams> }) {
   return <CategoryContent slug="fruits" basePath="/fruits" searchParams={await searchParams} />;

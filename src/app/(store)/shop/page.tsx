@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { CatalogView, type SearchParams } from "@/components/store/CatalogView";
+import { getI18n } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Shop all products", alternates: { canonical: "/shop" } };
+export async function generateMetadata(): Promise<Metadata> {
+  const { d } = await getI18n();
+  return { title: d.catalog.allProducts, description: d.catalog.allProductsDesc, alternates: { canonical: "/shop" } };
+}
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  return <CatalogView basePath="/shop" searchParams={await searchParams} title="All Products" description="Fresh produce, groceries and pantry staples — delivered to your door." />;
+  const { d } = await getI18n();
+  return <CatalogView basePath="/shop" searchParams={await searchParams} title={d.catalog.allProducts} description={d.catalog.allProductsDesc} />;
 }

@@ -36,6 +36,7 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 - [ ] **Catalog:** seeded prices are placeholders — review every price. Product, category and hero photos come from `website-images/` (copied to `public/images/photos/`); 55 products use them.
 - [ ] **Photo licences:** `website-images/image-list.md` credits a photographer/studio per photo, shown on `/about#photo-credits`. Confirm each photo's licence allows commercial use and whether that credit is sufficient. After changing photos, run `npm run photos` (syncs `public/images/photos/` and regenerates the credits).
 - [ ] **Store details:** phone, email, address, announcements, delivery slots (Admin → Settings); delivery areas & fees (Admin → Delivery).
+- [ ] **Bangla text:** review the Bangla product names/descriptions (Admin → Products) and policy pages with a native speaker.
 - [ ] **Policies:** `/terms`, `/privacy-policy`, `/refund-policy` contain starter text — have them reviewed.
 - [ ] **Coupons:** three starter coupons (FRESH20, WELCOME50, FREEDEL) exist — edit or delete in Admin → Coupons.
 
@@ -118,6 +119,10 @@ DATABASE_URL="postgres://…" npm run db:migrate   # run BEFORE deploying code t
 ## 4. Project status (2026-11-27)
 
 **Done and tested locally:** all six docs; storefront (home, listings with filters/sort/pagination, search, product details with variants, offers, organic, content pages); cart (guest + merge on login); auth (register, login, logout, password reset, rate-limited); customer account (overview, notifications, orders + cancel, addresses, wishlist, profile/password); checkout with server-side pricing, coupons, delivery areas/slots, idempotent order placement with atomic stock decrement; COD payment flow; full admin (dashboard, orders workflow, products with variants & image upload, categories, inventory movements, customers, messages, reviews moderation, coupons, delivery, payments ledger, reports + CSV, settings, staff users, roles/permissions, audit log); SEO (metadata, sitemap, robots, JSON-LD); security headers; unit tests; route smoke test.
+
+**Bangla / English:** the whole storefront, account, checkout and policy pages are bilingual with a language switch; products, categories, delivery areas and announcements have Bangla text (admin forms include Bangla fields). Admin panel stays English. See TRD §15a.
+
+**Usability additions:** mobile bottom navigation, add-to-cart toasts, live search suggestions, filter chips, sticky checkout bars, copyable coupon codes, optional call/WhatsApp help button (set a support phone in Settings).
 
 **Product photos:** the seed maps 55 products to the owner's photos and only replaces seed placeholder art, never images an admin uploaded. Re-run `npm run db:seed` on any database to apply.
 

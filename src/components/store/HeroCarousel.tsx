@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Pause, Play } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
-export type Slide = { title: string; accent: string; subtitle: string; cta: { href: string; label: string }; image: string; alt: string; seal?: string; photo?: boolean; focus?: string };
+export type Slide = { title: string; accent: string; subtitle: string; cta: { href: string; label: string }; image: string; alt: string; seal?: [string, string]; photo?: boolean; focus?: string };
 
-export function HeroCarousel({ slides }: { slides: Slide[] }) {
+export function HeroCarousel({ slides, label }: { slides: Slide[]; label: string }) {
+  const { d, num } = useI18n();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const touch = useRef<number | null>(null);
@@ -14,6 +16,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
 
   useEffect(() => {
     if (paused || slides.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const t = setInterval(() => setI((x) => (x + 1) % slides.length), 6000);
     return () => clearInterval(t);
   }, [paused, slides.length]);
@@ -21,7 +24,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
   return (
     <section
       aria-roledescription="carousel"
-      aria-label="Featured promotions"
+      aria-label={label}
       className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#e9f5df] via-[#f4faee] to-[#d4ecc4]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -45,7 +48,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
           key={idx}
           role="group"
           aria-roledescription="slide"
-          aria-label={`${idx + 1} of ${slides.length}`}
+          aria-label={`${num(idx + 1)} / ${num(slides.length)}`}
           aria-hidden={idx !== i}
           className={`grid min-h-[420px] items-center gap-4 px-6 pb-20 pt-8 transition-opacity duration-500 sm:px-10 md:min-h-[360px] md:grid-cols-[1fr_1.15fr] lg:min-h-[400px] lg:px-16 ${idx === i ? "relative opacity-100" : "pointer-events-none absolute inset-0 opacity-0"}`}
         >
@@ -76,8 +79,8 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             {s.seal && (
               <div className="absolute -top-2 right-0 hidden size-28 place-items-center rounded-full border-4 border-white bg-brand-700 text-center text-white shadow-xl sm:grid lg:size-32">
                 <span className="font-display text-2xl font-extrabold leading-none lg:text-3xl">
-                  {s.seal.split(" ")[0]}
-                  <span className="block text-xl lg:text-2xl">{s.seal.split(" ").slice(1).join(" ")}</span>
+                  {s.seal[0]}
+                  <span className="block text-xl lg:text-2xl">{s.seal[1]}</span>
                 </span>
               </div>
             )}
@@ -89,12 +92,12 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
           <button
             key={idx}
             onClick={() => go(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
+            aria-label={d.hero.goTo(idx + 1)}
             aria-current={idx === i}
             className={`h-3 rounded-full transition-all ${idx === i ? "w-8 bg-brand-700" : "w-3 bg-white shadow"}`}
           />
         ))}
-        <button onClick={() => setPaused((p) => !p)} className="ml-2 grid size-7 place-items-center rounded-full bg-white/90 text-brand-900 shadow" aria-label={paused ? "Play slideshow" : "Pause slideshow"}>
+        <button onClick={() => setPaused((p) => !p)} className="ml-2 grid size-7 place-items-center rounded-full bg-white/90 text-brand-900 shadow" aria-label={paused ? d.hero.play : d.hero.pause}>
           {paused ? <Play className="size-3.5" /> : <Pause className="size-3.5" />}
         </button>
       </div>

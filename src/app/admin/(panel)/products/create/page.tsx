@@ -20,7 +20,7 @@ export default async function CreateProductPage() {
       <ProductForm
         currency={settings.currencySymbol}
         categories={cats.map((c) => ({ id: c.id, name: c.name, parentId: c.parentId }))}
-        initial={{ name: "", slug: "", description: "", categoryId: null, unit: "kg", origin: "", freshnessLabel: "Fresh", images: [], isOrganic: false, isFeatured: false, isSeasonal: false, isActive: true, variants: [] }}
+        initial={{ name: "", nameBn: "", slug: "", description: "", descriptionBn: "", categoryId: null, unit: "kg", origin: "", freshnessLabel: "Fresh", images: [], isOrganic: false, isFeatured: false, isSeasonal: false, isActive: true, variants: [] }}
       />
     </>
   );

@@ -18,14 +18,16 @@ function CategoryFields({ c, all }: { c?: Cat; all: Cat[] }) {
     <>
       {c && <input type="hidden" name="id" value={c.id} />}
       <div className="grid gap-4 sm:grid-cols-2">
-        <AField name="name" label="Name" defaultValue={c?.name} required />
+        <AField name="name" label="Name (English)" defaultValue={c?.name} required />
+        <AField name="nameBn" label="নাম (বাংলা)" lang="bn" defaultValue={c?.nameBn ?? ""} />
         <AField name="slug" label="Slug" defaultValue={c?.slug} hint="Auto-generated if empty" />
         <AField name="image" label="Image URL" defaultValue={c?.image ?? ""} placeholder="/images/products/… or https://…" />
         <ASelect name="parentId" label="Parent category" defaultValue={c?.parentId ?? ""}>
           <option value="">— Top level —</option>
           {all.filter((x) => x.id !== c?.id && !x.parentId).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
         </ASelect>
-        <AField name="description" label="Description" defaultValue={c?.description ?? ""} className="sm:col-span-2" />
+        <AField name="description" label="Description (English)" defaultValue={c?.description ?? ""} className="sm:col-span-2" />
+        <AField name="descriptionBn" label="বিবরণ (বাংলা)" lang="bn" defaultValue={c?.descriptionBn ?? ""} className="sm:col-span-2" />
         <AField name="sortOrder" label="Sort order" type="number" min={0} defaultValue={String(c?.sortOrder ?? 0)} />
         <div className="flex items-end pb-2"><Checkbox name="isActive" label="Visible in store" defaultChecked={c?.isActive ?? true} /></div>
       </div>
@@ -52,7 +54,7 @@ export default async function CategoriesPage() {
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   {c.image && <img src={c.image} alt="" width={36} height={36} className="size-9 rounded-full object-cover" />}
-                  <div><p className="font-semibold">{c.parentId && "↳ "}{c.name}</p><p className="text-xs text-ink-400">/category/{c.slug}</p></div>
+                  <div><p className="font-semibold">{c.parentId && "↳ "}{c.name}{c.nameBn && <span className="ml-2 font-normal text-ink-400" lang="bn">{c.nameBn}</span>}</p><p className="text-xs text-ink-400">/category/{c.slug}</p></div>
                 </div>
                 <details className="mt-3">
                   <summary className="cursor-pointer text-sm font-semibold text-brand-700">Edit</summary>

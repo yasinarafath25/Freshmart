@@ -143,6 +143,23 @@ Order: announcement bar → header (logo, pill search, deliver-to, account, cart
 - Images: meaningful `alt`; decorative illustrations `alt=""`.
 - Tap targets ≥ 44 px; no hover-only functionality.
 
+## 7a. Bilingual UI (English / বাংলা)
+
+- Language switch (`EN | বাং`) in the announcement bar, mobile menu, footer and auth pages; the choice is remembered.
+- Bangla text uses Hind Siliguri with slightly taller line-height (`.lang-bn`); headings use normal letter-spacing in Bangla.
+- Prices, counts and dates use Bengali digits in Bangla mode; order numbers stay Latin so customers can quote them to support.
+- Product pages show the name in the active language with the other language underneath, which helps shoppers who search in either.
+- Never hard-code customer-facing text in components — add it to both dictionaries.
+
+## 7b. Usability patterns
+
+- **Mobile bottom navigation** (Home, Shop, Search, Cart with count, Account); sticky action bars (add to cart, checkout total, place order) sit above it.
+- **Toasts** confirm add-to-cart with a "View cart" shortcut; errors use the same component.
+- **Live search suggestions** with photos and prices, keyboard navigable; name matches rank above category matches.
+- **Active filter chips** on listings, removable one by one; filter count badge on mobile.
+- **Copy-to-clipboard** coupon codes on the Offers page.
+- **Help button** (call / WhatsApp) appears when a support phone is set in Settings.
+
 ## 8. Content voice
 
 Warm, short and honest: "Picked fresh this morning", "Add ৳150 more for free delivery". Avoid exaggerated claims that the business can't guarantee.

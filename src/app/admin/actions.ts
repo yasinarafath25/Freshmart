@@ -62,8 +62,10 @@ const variantSchema = z.object({
 const productSchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
   name: z.string().trim().min(2, "Name is required.").max(120),
+  nameBn: z.string().trim().max(120).optional(),
   slug: z.string().trim().max(80).optional(),
   description: z.string().trim().max(5000).default(""),
+  descriptionBn: z.string().trim().max(5000).optional(),
   categoryId: z.string().uuid("Choose a category.").nullable(),
   unit: z.enum(["kg", "g", "piece", "dozen", "bunch", "pack", "litre", "ml"]),
   origin: z.string().trim().max(80).optional(),
@@ -85,8 +87,10 @@ export async function saveProductAction(_: AdminState, formData: FormData): Prom
   const parsed = productSchema.safeParse({
     id: formData.get("id") ?? "",
     name: formData.get("name"),
+    nameBn: formData.get("nameBn") || undefined,
     slug: formData.get("slug") || undefined,
     description: formData.get("description") ?? "",
+    descriptionBn: formData.get("descriptionBn") || undefined,
     categoryId: formData.get("categoryId") || null,
     unit: formData.get("unit"),
     origin: formData.get("origin") || undefined,
@@ -116,8 +120,10 @@ export async function saveProductAction(_: AdminState, formData: FormData): Prom
 
   const values = {
     name: d.name,
+    nameBn: d.nameBn || null,
     slug,
     description: d.description,
+    descriptionBn: d.descriptionBn || null,
     categoryId: d.categoryId,
     unit: d.unit,
     origin: d.origin ?? null,
@@ -189,8 +195,10 @@ export async function toggleProductActiveAction(formData: FormData) {
 const categorySchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
   name: z.string().trim().min(2, "Name is required.").max(60),
+  nameBn: z.string().trim().max(60).optional(),
   slug: z.string().trim().max(60).optional(),
   description: z.string().trim().max(300).optional(),
+  descriptionBn: z.string().trim().max(300).optional(),
   image: z.string().trim().max(300).regex(/^(|\/media\/products\/|\/images\/|https:\/\/)/, "Invalid image URL.").optional(),
   parentId: z.string().uuid().optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).max(999).default(0),
@@ -207,7 +215,7 @@ export async function saveCategoryAction(_: AdminState, formData: FormData): Pro
   const clash = await db.query.categories.findFirst({ where: d.id ? and(eq(categories.slug, slug), ne(categories.id, d.id)) : eq(categories.slug, slug) });
   if (clash) return { errors: { slug: "Slug already in use." } };
   if (d.id && d.parentId === d.id) return { errors: { parentId: "A category can’t be its own parent." } };
-  const values = { name: d.name, slug, description: d.description || null, image: d.image || null, parentId: d.parentId || null, sortOrder: d.sortOrder, isActive: bool(formData.get("isActive")) };
+  const values = { name: d.name, nameBn: d.nameBn || null, descriptionBn: d.descriptionBn || null, slug, description: d.description || null, image: d.image || null, parentId: d.parentId || null, sortOrder: d.sortOrder, isActive: bool(formData.get("isActive")) };
   if (d.id) await db.update(categories).set(values).where(eq(categories.id, d.id));
   else await db.insert(categories).values(values);
   await audit(user.id, d.id ? "update" : "create", "category", d.id || slug);
@@ -466,6 +474,8 @@ export async function saveZoneAction(_: AdminState, formData: FormData): Promise
     .object({
       id: z.string().uuid().optional().or(z.literal("")),
       name: z.string().trim().min(2).max(60),
+      nameBn: z.string().trim().max(60).optional(),
+      etaTextBn: z.string().trim().max(60).optional(),
       fee: money,
       freeAbove: optMoney,
       etaText: z.string().trim().min(2).max(60),
@@ -474,7 +484,7 @@ export async function saveZoneAction(_: AdminState, formData: FormData): Promise
     .safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
   const d = parsed.data;
-  const values = { name: d.name, fee: d.fee, freeAbove: d.freeAbove ?? null, etaText: d.etaText, sortOrder: d.sortOrder, isActive: bool(formData.get("isActive")) };
+  const values = { name: d.name, nameBn: d.nameBn || null, etaTextBn: d.etaTextBn || null, fee: d.fee, freeAbove: d.freeAbove ?? null, etaText: d.etaText, sortOrder: d.sortOrder, isActive: bool(formData.get("isActive")) };
   const db = getDb();
   if (d.id) await db.update(deliveryZones).set(values).where(eq(deliveryZones.id, d.id));
   else await db.insert(deliveryZones).values(values);
@@ -521,6 +531,7 @@ export async function saveSettingsAction(_: AdminState, formData: FormData): Pro
   const parsed = storeSettingsSchema.safeParse({
     storeName: formData.get("storeName"),
     tagline: formData.get("tagline"),
+    taglineBn: formData.get("taglineBn") ?? "",
     currencySymbol: formData.get("currencySymbol"),
     currencyCode: String(formData.get("currencyCode") ?? "").toUpperCase(),
     supportPhone: formData.get("supportPhone") ?? "",
@@ -534,6 +545,7 @@ export async function saveSettingsAction(_: AdminState, formData: FormData): Pro
     deliverySlots: lines("deliverySlots"),
     codEnabled: bool(formData.get("codEnabled")),
     announcements: lines("announcements").slice(0, 3),
+    announcementsBn: lines("announcementsBn").slice(0, 3),
     socialFacebook: formData.get("socialFacebook") ?? "",
     socialInstagram: formData.get("socialInstagram") ?? "",
   });

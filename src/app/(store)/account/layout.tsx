@@ -1,10 +1,12 @@
 import { requireUserPage } from "@/lib/auth/guards";
 import { AccountNav } from "@/components/store/AccountNav";
 import { logoutAction } from "@/app/actions/auth";
+import { getI18n } from "@/lib/i18n/server";
 import { LogOut } from "lucide-react";
 
 export default async function AccountLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUserPage("/account");
+  const { d } = await getI18n();
   return (
     <div className="container-page py-8">
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
@@ -22,7 +24,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
             <AccountNav />
             <form action={logoutAction} className="mt-2 border-t border-line pt-2">
               <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 hover:bg-red-50 hover:text-tomato-600">
-                <LogOut className="size-4" aria-hidden /> Sign out
+                <LogOut className="size-4" aria-hidden /> {d.account.signOut}
               </button>
             </form>
           </div>

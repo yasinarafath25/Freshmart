@@ -7,6 +7,8 @@ import { addToCartAction } from "@/app/actions/cart";
 import { toggleWishlistAction } from "@/app/actions/wishlist";
 import { buttonClass } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
+import { useI18n } from "@/lib/i18n/client";
+import { toast } from "./Toaster";
 
 export function AddToCartButton({
   variantId,
@@ -14,22 +16,23 @@ export function AddToCartButton({
   disabled,
   size = "md",
   className,
-  label = "Add to Cart",
+  productName,
 }: {
   variantId: string | null;
   quantity?: number;
   disabled?: boolean;
   size?: "sm" | "md" | "lg";
   className?: string;
-  label?: string;
+  productName?: string;
 }) {
+  const { d, num } = useI18n();
   const [pending, start] = useTransition();
-  const [state, setState] = useState<{ ok: boolean; message?: string } | null>(null);
+  const [done, setDone] = useState(false);
 
   if (!variantId || disabled) {
     return (
       <button type="button" disabled className={buttonClass("secondary", size, cn("w-full", className))}>
-        Out of stock
+        {d.product.outOfStock}
       </button>
     );
   }
@@ -42,32 +45,29 @@ export function AddToCartButton({
         onClick={() =>
           start(async () => {
             const res = await addToCartAction(variantId, quantity);
-            setState(res);
-            setTimeout(() => setState(null), 2200);
+            if (res.ok) {
+              setDone(true);
+              setTimeout(() => setDone(false), 2000);
+              toast({
+                message: res.code === "capped" ? d.product.capped(num(res.quantity ?? 0)) : productName ? `${productName} — ${d.product.addedToast}` : d.product.addedToast,
+                action: { href: "/cart", label: d.product.viewCart },
+              });
+            } else {
+              toast({ tone: "error", message: res.code === "soldout" ? d.product.soldOutMsg : res.code === "unavailable" ? d.product.unavailable : d.product.invalid });
+            }
           })
         }
-        className={buttonClass(state?.ok ? "outline" : "primary", size, "w-full")}
-        aria-live="polite"
+        className={buttonClass(done ? "outline" : "primary", size, "w-full")}
       >
-        {pending ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden />
-        ) : state?.ok ? (
-          <Check className="size-4" aria-hidden />
-        ) : (
-          <ShoppingCart className="size-4" aria-hidden />
-        )}
-        {state?.ok ? "Added" : label}
+        {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : done ? <Check className="size-4" aria-hidden /> : <ShoppingCart className="size-4" aria-hidden />}
+        {done ? d.product.added : d.product.addToCart}
       </button>
-      {state && state.message && state.message !== "Added to cart" && (
-        <p className={cn("mt-1.5 text-xs", state.ok ? "text-ink-600" : "text-tomato-600")} role="status">
-          {state.message}
-        </p>
-      )}
     </div>
   );
 }
 
 export function WishlistButton({ productId, initial, className, withLabel }: { productId: string; initial: boolean; className?: string; withLabel?: boolean }) {
+  const { d } = useI18n();
   const [saved, setSaved] = useState(initial);
   const [pending, start] = useTransition();
   const router = useRouter();
@@ -76,14 +76,16 @@ export function WishlistButton({ productId, initial, className, withLabel }: { p
     <button
       type="button"
       aria-pressed={saved}
-      aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
+      aria-label={saved ? d.product.removeWishlist : d.product.addWishlist}
       disabled={pending}
       onClick={(e) => {
         e.preventDefault();
         start(async () => {
           const res = await toggleWishlistAction(productId);
-          if (res.needsLogin) router.push(`/login?next=${encodeURIComponent(pathname)}`);
-          else if (res.ok) setSaved(!!res.saved);
+          if (res.needsLogin) {
+            toast({ tone: "error", message: d.product.loginForWishlist });
+            router.push(`/login?next=${encodeURIComponent(pathname)}`);
+          } else if (res.ok) setSaved(!!res.saved);
         });
       }}
       className={cn(
@@ -94,7 +96,7 @@ export function WishlistButton({ productId, initial, className, withLabel }: { p
       )}
     >
       <Heart className={cn("size-[18px]", saved && "fill-tomato-500 text-tomato-500")} aria-hidden />
-      {withLabel && <span>{saved ? "Saved" : "Wishlist"}</span>}
+      {withLabel && <span>{saved ? d.product.saved : d.product.wishlist}</span>}
     </button>
   );
 }
