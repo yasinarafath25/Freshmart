@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="banana illustration">
+<defs><linearGradient id="g0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff176"/><stop offset="1" stop-color="#f9a825"/></linearGradient><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff176"/><stop offset="1" stop-color="#f9a825"/></linearGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(0 10) scale(1.05)">
+    <path d="M-80 -30 C -60 40 40 60 84 -10 C 70 6 20 30 -20 14 C -50 2 -66 -16 -72 -36Z" fill="url(#g0)"/>
+    <path d="M-80 -30 l-8 -8 l8 -4 l6 6Z" fill="#6d4c1f"/><path d="M84 -10 l6 -2 l-2 6Z" fill="#6d4c1f"/>
+    <path d="M-60 -10 C -30 26 30 34 70 0" stroke="#e0a800" stroke-width="3" fill="none" opacity=".6"/></g><g transform="translate(6 40) scale(1)">
+    <path d="M-80 -30 C -60 40 40 60 84 -10 C 70 6 20 30 -20 14 C -50 2 -66 -16 -72 -36Z" fill="url(#g1)"/>
+    <path d="M-80 -30 l-8 -8 l8 -4 l6 6Z" fill="#6d4c1f"/><path d="M84 -10 l6 -2 l-2 6Z" fill="#6d4c1f"/>
+    <path d="M-60 -10 C -30 26 30 34 70 0" stroke="#e0a800" stroke-width="3" fill="none" opacity=".6"/></g>
+</svg>

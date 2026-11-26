@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="chili-powder illustration">
+<defs><radialGradient id="g0" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ff8a65"/><stop offset=".55" stop-color="#c62828"/><stop offset="1" stop-color="#c62828"/></radialGradient><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eceff1"/><stop offset="1" stop-color="#b0bec5"/></linearGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(0 30) scale(1.1)">
+    <path d="M-70 -4 C -50 -60 50 -60 70 -4Z" fill="url(#g0)"/>
+    <path d="M-84 -6 C -80 50 80 50 84 -6Z" fill="url(#g1)"/><path d="M-84 -6 C -80 6 80 6 84 -6" stroke="#90a4ae" stroke-width="3" fill="none"/></g>
+</svg>

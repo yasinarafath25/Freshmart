@@ -1,0 +1,30 @@
+{
+  // Cloudflare Worker for FreshMart (Next.js via @opennextjs/cloudflare).
+  // Replace the placeholder IDs below with your own (see README → Deployment).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "freshmart",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "freshmart" }],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "REPLACE_WITH_HYPERDRIVE_ID",
+      // Used by `wrangler dev` / `opennextjs-cloudflare preview` locally:
+      "localConnectionString": "postgres://postgres:postgres@localhost:54329/freshmart"
+    }
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "freshmart-media" }],
+  "vars": {
+    "APP_URL": "https://REPLACE_WITH_YOUR_DOMAIN",
+    "SSLCOMMERZ_SANDBOX": "true"
+  },
+  "observability": { "enabled": true }
+  // Secrets (never put them here): wrangler secret put SESSION_SECRET / RESEND_API_KEY / EMAIL_FROM /
+  // SSLCOMMERZ_STORE_ID / SSLCOMMERZ_STORE_PASSWORD
+}

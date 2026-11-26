@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="honey illustration">
+<defs><linearGradient id="g0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb300"/><stop offset="1" stop-color="#e65100"/></linearGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(0 10) scale(1.1)">
+    <rect x="-44" y="-74" width="88" height="22" rx="6" fill="#8d6e63"/>
+    <rect x="-52" y="-54" width="104" height="134" rx="22" fill="url(#g0)" opacity=".95"/>
+    <rect x="-36" y="-6" width="72" height="44" rx="6" fill="#fff8e1"/><ellipse cx="-36" cy="-20" rx="6" ry="26" fill="#fff" opacity=".35"/></g>
+</svg>

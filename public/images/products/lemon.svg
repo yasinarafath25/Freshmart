@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="lemon illustration">
+<defs><radialGradient id="g0" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff59d"/><stop offset=".55" stop-color="#c6d82f"/><stop offset="1" stop-color="#6f9a1a"/></radialGradient><radialGradient id="g1" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff59d"/><stop offset=".55" stop-color="#c6d82f"/><stop offset="1" stop-color="#6f9a1a"/></radialGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(-30 10) scale(0.8)">
+    <path d="M-70 0 C -60 -46 60 -46 70 0 C 60 46 -60 46 -70 0Z" fill="url(#g0)"/><ellipse cx="-24" cy="-14" rx="18" ry="10" fill="#fff" opacity=".35"/></g><g transform="translate(40 40) scale(0.8)">
+    <path d="M-70 0 C -60 -46 60 -46 70 0 C 60 46 -60 46 -70 0Z" fill="url(#g1)"/><ellipse cx="-24" cy="-14" rx="18" ry="10" fill="#fff" opacity=".35"/></g>
+</svg>

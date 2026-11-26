@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="spinach illustration">
+<defs></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(0 20) scale(1.05)">
+    <g transform="rotate(-50)"><path d="M0 60 C -40 10 -30 -60 0 -80 C 30 -60 40 10 0 60Z" fill="#2e7d32"/><path d="M0 60 V -70" stroke="#a5d6a7" stroke-width="3"/></g><g transform="rotate(-20)"><path d="M0 60 C -40 10 -30 -60 0 -80 C 30 -60 40 10 0 60Z" fill="#388e3c"/><path d="M0 60 V -70" stroke="#a5d6a7" stroke-width="3"/></g><g transform="rotate(10)"><path d="M0 60 C -40 10 -30 -60 0 -80 C 30 -60 40 10 0 60Z" fill="#43a047"/><path d="M0 60 V -70" stroke="#a5d6a7" stroke-width="3"/></g><g transform="rotate(40)"><path d="M0 60 C -40 10 -30 -60 0 -80 C 30 -60 40 10 0 60Z" fill="#2e7d32"/><path d="M0 60 V -70" stroke="#a5d6a7" stroke-width="3"/></g></g>
+</svg>

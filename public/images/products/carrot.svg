@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="carrot illustration">
+<defs><linearGradient id="g0" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffb74d"/><stop offset="1" stop-color="#ef6c00"/></linearGradient><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffb74d"/><stop offset="1" stop-color="#ef6c00"/></linearGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(-24 10) scale(1)">
+    <path d="M-20 -60 C 10 -66 26 -54 22 -40 L -48 74 C -52 80 -58 78 -56 70Z" fill="url(#g0)"/>
+    <path d="M-30 -20 h12 M-38 10 h10 M-46 40 h8" stroke="#c75b00" stroke-width="3" stroke-linecap="round"/>
+    <path d="M4 -58 C 0 -90 -10 -100 -18 -104 M8 -58 C 14 -92 24 -100 34 -104 M2 -58 C 6 -96 6 -108 4 -116" stroke="#3FA34D" stroke-width="7" fill="none" stroke-linecap="round"/></g><g transform="translate(30 16) scale(0.95)">
+    <path d="M-20 -60 C 10 -66 26 -54 22 -40 L -48 74 C -52 80 -58 78 -56 70Z" fill="url(#g1)"/>
+    <path d="M-30 -20 h12 M-38 10 h10 M-46 40 h8" stroke="#c75b00" stroke-width="3" stroke-linecap="round"/>
+    <path d="M4 -58 C 0 -90 -10 -100 -18 -104 M8 -58 C 14 -92 24 -100 34 -104 M2 -58 C 6 -96 6 -108 4 -116" stroke="#3FA34D" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+</svg>

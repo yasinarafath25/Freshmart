@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" role="img" aria-label="watermelon illustration">
+<defs><linearGradient id="g0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6f61"/><stop offset="1" stop-color="#e53935"/></linearGradient></defs>
+<rect x="-160" y="-160" width="320" height="320" fill="#fff"/>
+<circle r="128" fill="#EEF7EC"/>
+<ellipse cx="0" cy="110" rx="110" ry="12" fill="#0b4d2c" opacity=".08"/>
+<g transform="translate(0 20) scale(1.2)">
+    <path d="M-80 -10 A 80 80 0 0 0 80 -10Z" fill="#2E7D32"/><path d="M-72 -10 A 72 72 0 0 0 72 -10Z" fill="#f1f8e9"/><path d="M-64 -10 A 64 64 0 0 0 64 -10Z" fill="url(#g0)"/>
+    <ellipse cx="-30" cy="10" rx="3" ry="5" fill="#1b1b1b"/><ellipse cx="0" cy="22" rx="3" ry="5" fill="#1b1b1b"/><ellipse cx="30" cy="10" rx="3" ry="5" fill="#1b1b1b"/><ellipse cx="-14" cy="34" rx="3" ry="5" fill="#1b1b1b"/><ellipse cx="16" cy="34" rx="3" ry="5" fill="#1b1b1b"/></g>
+</svg>

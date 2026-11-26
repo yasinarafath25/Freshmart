@@ -1,0 +1,74 @@
+import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { getSettings } from "@/lib/services/settings";
+import { listCategories } from "@/lib/services/catalog";
+import { Logo } from "./Logo";
+
+export async function Footer() {
+  const [s, cats] = await Promise.all([getSettings(), listCategories()]);
+  const year = new Date().getFullYear();
+  const cols = [
+    { title: "Shop", links: [{ href: "/shop", label: "All products" }, ...cats.filter((c) => !c.parentId).slice(0, 5).map((c) => ({ href: `/category/${c.slug}`, label: c.name })), { href: "/offers", label: "Offers" }] },
+    { title: "Account", links: [{ href: "/account", label: "My account" }, { href: "/account/orders", label: "Track orders" }, { href: "/account/wishlist", label: "Wishlist" }, { href: "/cart", label: "Cart" }] },
+    { title: "Help", links: [{ href: "/faq", label: "FAQ" }, { href: "/contact", label: "Contact us" }, { href: "/refund-policy", label: "Refund policy" }, { href: "/terms", label: "Terms" }, { href: "/privacy-policy", label: "Privacy" }, { href: "/about", label: "About us" }] },
+  ];
+  return (
+    <footer className="mt-8 bg-brand-900 text-white/80">
+      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div>
+          <Logo name={s.storeName} tagline={s.tagline} light />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed">
+            Fresh fruits, vegetables and daily groceries delivered to your doorstep. Sourced from local farms, quality-checked every morning.
+          </p>
+          <ul className="mt-5 space-y-2 text-sm">
+            {s.address && (
+              <li className="flex gap-2">
+                <MapPin className="size-4 shrink-0 text-lime-400" aria-hidden /> {s.address}
+              </li>
+            )}
+            {s.supportPhone && (
+              <li className="flex gap-2">
+                <Phone className="size-4 shrink-0 text-lime-400" aria-hidden />
+                <a href={`tel:${s.supportPhone.replace(/\s/g, "")}`} className="hover:text-white">
+                  {s.supportPhone}
+                </a>
+              </li>
+            )}
+            {s.supportEmail && (
+              <li className="flex gap-2">
+                <Mail className="size-4 shrink-0 text-lime-400" aria-hidden />
+                <a href={`mailto:${s.supportEmail}`} className="hover:text-white">
+                  {s.supportEmail}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+        {cols.map((c) => (
+          <div key={c.title}>
+            <h3 className="font-display text-base font-semibold text-white">{c.title}</h3>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              {c.links.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="transition hover:text-lime-400">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-white/10">
+        <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs sm:flex-row">
+          <p>
+            © {year} {s.storeName}. All rights reserved.
+          </p>
+          <p className="flex items-center gap-2">
+            We accept <span className="rounded bg-white/10 px-2 py-0.5 font-semibold text-white">Cash on Delivery</span>
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
