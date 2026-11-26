@@ -27,8 +27,8 @@ export default async function HomePage() {
   ]);
   const cur = settings.currencySymbol;
   const slides: Slide[] = [
-    { title: "Fresh Fruits & Vegetables", accent: "Directly from Nature", subtitle: "Healthy Food. Happy Life.", cta: { href: "/shop", label: "Shop Now" }, image: "/images/hero-basket.svg", alt: "A wicker basket full of fresh fruits and vegetables", seal: "100% Fresh" },
-    { title: "Straight from the Bazar", accent: "Every Morning", subtitle: "Gourds, greens, beans and more — picked fresh daily.", cta: { href: "/vegetables", label: "Shop Vegetables" }, image: "/images/photos/banner-vegetable-basket.jpg", alt: "A market stall piled with fresh vegetables", photo: true, focus: "center 35%" },
+    { title: "Fresh Fruits & Vegetables", accent: "Directly from Nature", subtitle: "Healthy Food. Happy Life.", cta: { href: "/shop", label: "Shop Now" }, image: "/images/photos/banner-vegetable-basket.jpg", alt: "A market stall piled with fresh vegetables", seal: "100% Fresh", photo: true, focus: "center 35%" },
+    { title: "Seasonal Fruits", accent: "Picked at Peak Ripeness", subtitle: "Himsagar mangoes, melons and more — only in season.", cta: { href: "/fruits", label: "Explore Fruits" }, image: "/images/photos/mango.jpg", alt: "Ripe Himsagar mangoes", photo: true },
     { title: "Spices & Pantry", accent: "Authentic Flavour", subtitle: "Turmeric, chili, cumin, dal and daily essentials.", cta: { href: "/spices", label: "Shop Spices" }, image: "/images/photos/banner-spices-cooking.jpg", alt: "Colourful mounds of ground spices", photo: true },
   ];
 
@@ -48,7 +48,7 @@ export default async function HomePage() {
               className={`group flex w-28 shrink-0 snap-start flex-col items-center rounded-2xl px-2 py-3 text-center transition hover:bg-white hover:shadow-card sm:w-auto ${idx > 0 ? "lg:border-l lg:border-line/80" : ""}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={c.image ?? "/images/products/rice.svg"} alt="" width={72} height={72} className="size-16 rounded-full transition group-hover:scale-105 sm:size-[72px]" />
+              <img src={c.image ?? "/images/placeholder.svg"} alt="" width={72} height={72} loading="lazy" className="size-16 rounded-full border-2 border-white object-cover shadow-card transition group-hover:scale-105 sm:size-[72px]" />
               <span className="mt-2 text-sm font-semibold text-ink-900">{c.name}</span>
               <span className="text-xs text-brand-700">See all →</span>
             </Link>
@@ -155,7 +155,7 @@ export default async function HomePage() {
       <section className="container-page mt-12">
         <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-r from-sun-400 to-sun-300 px-8 py-10 sm:px-12">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/hero-fruits.svg" alt="" width={600} height={360} className="absolute -right-10 bottom-0 hidden h-full w-auto opacity-95 md:block" />
+          <img src="/images/photos/orange.jpg" alt="" width={960} height={640} loading="lazy" className="absolute inset-y-0 right-0 hidden h-full w-2/5 object-cover [mask-image:linear-gradient(to_right,transparent,black_35%)] md:block" />
           <div className="relative max-w-lg">
             <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-brand-900/80">
               <Sparkles className="size-4" aria-hidden /> Limited time

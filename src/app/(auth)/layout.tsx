@@ -17,7 +17,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
       </div>
       <div className="relative hidden overflow-hidden bg-gradient-to-br from-[#e9f5df] via-[#f4faee] to-[#cfe9bd] lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/hero-basket.svg" alt="" width={640} height={320} className="w-full max-w-xl drop-shadow-xl" />
+        <img src="/images/photos/banner-vegetable-basket.jpg" alt="" width={960} height={1440} className="aspect-[4/3] w-full max-w-xl rounded-3xl border-4 border-white object-cover shadow-xl" />
         <p className="mt-8 max-w-md text-center font-display text-3xl font-extrabold text-brand-900">Fresh from the farm to your kitchen.</p>
         <p className="mt-2 text-center text-ink-600">Same-day delivery · Cash on delivery · 100% freshness guarantee</p>
       </div>

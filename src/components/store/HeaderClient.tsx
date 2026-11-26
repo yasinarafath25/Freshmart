@@ -43,7 +43,7 @@ export function CategoryMenu({ categories }: { categories: { href: string; label
                 <Link href={c.href} className="flex items-center gap-3 rounded-xl px-3 py-2 text-[15px] font-medium hover:bg-mint-50 hover:text-brand-700">
                   {c.image && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.image} alt="" width={32} height={32} className="size-8 rounded-lg" />
+                    <img src={c.image} alt="" width={32} height={32} className="size-8 rounded-lg object-cover" />
                   )}
                   {c.label}
                 </Link>

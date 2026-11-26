@@ -51,7 +51,7 @@ export default async function CategoriesPage() {
               <td className={td}>
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {c.image && <img src={c.image} alt="" width={36} height={36} className="size-9 rounded-full" />}
+                  {c.image && <img src={c.image} alt="" width={36} height={36} className="size-9 rounded-full object-cover" />}
                   <div><p className="font-semibold">{c.parentId && "↳ "}{c.name}</p><p className="text-xs text-ink-400">/category/{c.slug}</p></div>
                 </div>
                 <details className="mt-3">

@@ -67,7 +67,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
             <td className={td}>
               <div className="flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.images[0] ?? "/images/products/rice.svg"} alt="" width={44} height={44} className="size-11 rounded-lg border border-line object-cover" />
+                <img src={p.images[0] ?? "/images/placeholder.svg"} alt="" width={44} height={44} className="size-11 rounded-lg border border-line object-cover" />
                 <div><Link href={`/admin/products/${p.id}/edit`} className="font-semibold hover:text-brand-700">{p.name}</Link><span className="block text-xs text-ink-400">{variants} variant{variants === 1 ? "" : "s"} · /{p.slug}</span></div>
               </div>
             </td>

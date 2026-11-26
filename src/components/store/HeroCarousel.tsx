@@ -67,7 +67,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             {s.photo ? (
               <div className="h-56 w-full max-w-[600px] overflow-hidden rounded-[20px] border-4 border-white shadow-xl sm:h-72 lg:h-[300px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.image} alt={s.alt} width={960} height={720} loading="lazy" decoding="async" className="size-full object-cover" style={{ objectPosition: s.focus ?? "center" }} />
+                <img src={s.image} alt={s.alt} width={960} height={720} loading={idx === 0 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : undefined} decoding="async" className="size-full object-cover" style={{ objectPosition: s.focus ?? "center" }} />
               </div>
             ) : (
               // eslint-disable-next-line @next/next/no-img-element

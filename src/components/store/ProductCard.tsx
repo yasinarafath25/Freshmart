@@ -9,7 +9,7 @@ export function ProductImage({ src, alt, className, priority }: { src: string | 
   return (
     // eslint-disable-next-line @next/next/no-img-element -- plain img: Next image optimiser is not available on Workers (TRD §11)
     <img
-      src={src ?? "/images/products/rice.svg"}
+      src={src ?? "/images/placeholder.svg"}
       alt={alt}
       width={320}
       height={320}

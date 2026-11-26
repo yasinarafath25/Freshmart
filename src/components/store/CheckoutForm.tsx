@@ -164,7 +164,7 @@ export function CheckoutForm(props: {
             {props.lines.map((l) => (
               <li key={l.variantId} className="flex items-center gap-3 text-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.image ?? "/images/products/rice.svg"} alt="" width={44} height={44} className="size-11 rounded-lg border border-line" />
+                <img src={l.image ?? "/images/placeholder.svg"} alt="" width={44} height={44} className="size-11 rounded-lg border border-line object-cover" />
                 <span className="flex-1">
                   <span className="block font-medium">{l.productName}</span>
                   <span className="text-xs text-ink-600">{l.variantName} × {l.quantity}</span>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: { default: "FreshMart — Fresh Fruits, Vegetables & Groceries Delivered", template: "%s | FreshMart" },
   description:
     "Order farm-fresh fruits, vegetables, groceries, spices and grains online. Same-day home delivery, cash on delivery and a 100% freshness guarantee.",
-  openGraph: { type: "website", siteName: "FreshMart", images: ["/images/hero-basket.svg"] },
+  openGraph: { type: "website", siteName: "FreshMart", images: ["/images/photos/banner-vegetable-basket.jpg"] },
   icons: { icon: "/icon.svg" },
 };
 
