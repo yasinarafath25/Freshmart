@@ -33,7 +33,8 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 ## 2. Before launch — owner checklist
 
 - [ ] **Currency & market:** Admin → Settings. Default is `৳` / `BDT` (from the design). If the store operates in India (Karimganj, Assam) switch to `₹` / `INR` — and note SSLCommerz is a Bangladeshi gateway; an Indian gateway (e.g. Razorpay) would need to be added via `src/lib/services/payments.ts`.
-- [ ] **Catalog:** seeded prices are placeholders and product images are SVG illustrations. Replace with real prices and photos (Admin → Products → Edit → Upload).
+- [ ] **Catalog:** seeded prices are placeholders — review every price. Product, category and hero photos come from `website-images/` (copied to `public/images/photos/`); 55 products use them.
+- [ ] **Photo licences:** confirm you have the right to use each photo in `website-images/`. Several look like stock/Wikimedia images, which can require attribution (e.g. CC BY-SA). Two banners show foreign price tags (£ / French labels).
 - [ ] **Store details:** phone, email, address, announcements, delivery slots (Admin → Settings); delivery areas & fees (Admin → Delivery).
 - [ ] **Policies:** `/terms`, `/privacy-policy`, `/refund-policy` contain starter text — have them reviewed.
 - [ ] **Coupons:** three starter coupons (FRESH20, WELCOME50, FREEDEL) exist — edit or delete in Admin → Coupons.
@@ -117,6 +118,8 @@ DATABASE_URL="postgres://…" npm run db:migrate   # run BEFORE deploying code t
 ## 4. Project status (2026-11-27)
 
 **Done and tested locally:** all six docs; storefront (home, listings with filters/sort/pagination, search, product details with variants, offers, organic, content pages); cart (guest + merge on login); auth (register, login, logout, password reset, rate-limited); customer account (overview, notifications, orders + cancel, addresses, wishlist, profile/password); checkout with server-side pricing, coupons, delivery areas/slots, idempotent order placement with atomic stock decrement; COD payment flow; full admin (dashboard, orders workflow, products with variants & image upload, categories, inventory movements, customers, messages, reviews moderation, coupons, delivery, payments ledger, reports + CSV, settings, staff users, roles/permissions, audit log); SEO (metadata, sitemap, robots, JSON-LD); security headers; unit tests; route smoke test.
+
+**Product photos:** the seed maps 55 products to the owner's photos and only replaces seed placeholder art, never images an admin uploaded. Re-run `npm run db:seed` on any database to apply.
 
 **Not verified / pending:**
 - OpenNext Workers build not run successfully on this Windows machine (symlink permission) — run in WSL/CI.

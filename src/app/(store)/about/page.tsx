@@ -8,6 +8,8 @@ export default async function AboutPage() {
   const s = await getSettings();
   return (
     <ContentPage title={"About Us"} intro={"We started with a simple idea: everyone deserves fresh, honest food at fair prices."}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/photos/banner-vegetable-market.jpg" alt="Fresh vegetables laid out at a market stall" width={960} height={720} loading="lazy" className="aspect-[16/9] w-full rounded-2xl object-cover" />
       <h2>Our story</h2>
 <p>{s.storeName} connects local farms and trusted suppliers with households across {s.defaultLocation}. Every morning our team checks produce for freshness, ripeness and quality before it is packed for delivery.</p>
 <h2>What we promise</h2>

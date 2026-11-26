@@ -46,7 +46,8 @@ Rules: white text only on `brand-700`/`brand-900`; yellow/lime surfaces always c
 ### 1.4 Iconography & imagery
 
 - lucide-react, 1.75 stroke, 18–20 px in UI, 24 px in feature strips.
-- Product imagery: square, centred produce on white/very light background, consistent lighting. Seed data ships SVG illustrations as placeholders; production must use real photography (≥ 800×800, WebP).
+- Product imagery: square crop (`object-cover`) of real photos from the owner's library (`public/images/photos/`, sourced from `website-images/`). Prefer centred produce, consistent lighting, ≥ 800 px. SVG illustrations in `public/images/products/` remain only as a fallback.
+- Hero: slide 1 keeps the illustrated basket (closest to the approved reference); slides 2–3 use photo banners in a rounded white-bordered frame.
 - Hero/banners: produce composition on soft green gradient, left-aligned copy.
 
 ## 2. Core components

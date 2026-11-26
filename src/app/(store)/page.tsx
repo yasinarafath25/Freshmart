@@ -28,8 +28,8 @@ export default async function HomePage() {
   const cur = settings.currencySymbol;
   const slides: Slide[] = [
     { title: "Fresh Fruits & Vegetables", accent: "Directly from Nature", subtitle: "Healthy Food. Happy Life.", cta: { href: "/shop", label: "Shop Now" }, image: "/images/hero-basket.svg", alt: "A wicker basket full of fresh fruits and vegetables", seal: "100% Fresh" },
-    { title: "Certified Organic", accent: "Grown the Natural Way", subtitle: "Pesticide-free greens and vegetables.", cta: { href: "/organic", label: "Shop Organic" }, image: "/images/hero-organic.svg", alt: "Organic broccoli, spinach, carrots and cauliflower" },
-    { title: "Seasonal Fruits", accent: "Picked at Peak Ripeness", subtitle: "Mangoes, melons and more — only in season.", cta: { href: "/fruits", label: "Explore Fruits" }, image: "/images/hero-fruits.svg", alt: "Watermelon, mango, grapes and oranges" },
+    { title: "Straight from the Bazar", accent: "Every Morning", subtitle: "Gourds, greens, beans and more — picked fresh daily.", cta: { href: "/vegetables", label: "Shop Vegetables" }, image: "/images/photos/banner-vegetable-basket.jpg", alt: "A market stall piled with fresh vegetables", photo: true, focus: "center 35%" },
+    { title: "Spices & Pantry", accent: "Authentic Flavour", subtitle: "Turmeric, chili, cumin, dal and daily essentials.", cta: { href: "/spices", label: "Shop Spices" }, image: "/images/photos/banner-spices-cooking.jpg", alt: "Colourful mounds of ground spices", photo: true },
   ];
 
   return (
@@ -92,7 +92,7 @@ export default async function HomePage() {
             Shop Now <ArrowRight className="size-4" aria-hidden />
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/products/tomato.svg" alt="" width={160} height={160} className="absolute -bottom-6 -right-6 size-40 rounded-full opacity-90" />
+          <img src="/images/photos/tomato.jpg" alt="" width={160} height={160} className="absolute -bottom-6 -right-6 size-40 rounded-full border-4 border-white/20 object-cover" />
         </Link>
       </section>
 

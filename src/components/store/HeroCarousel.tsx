@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Pause, Play } from "lucide-react";
 
-export type Slide = { title: string; accent: string; subtitle: string; cta: { href: string; label: string }; image: string; alt: string; seal?: string };
+export type Slide = { title: string; accent: string; subtitle: string; cta: { href: string; label: string }; image: string; alt: string; seal?: string; photo?: boolean; focus?: string };
 
 export function HeroCarousel({ slides }: { slides: Slide[] }) {
   const [i, setI] = useState(0);
@@ -63,9 +63,16 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
               {s.cta.label} <ArrowRight className="size-5" aria-hidden />
             </Link>
           </div>
-          <div className="relative -mb-6 flex items-end justify-center md:mb-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.image} alt={s.alt} width={800} height={400} loading={idx === 0 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : undefined} className="w-full max-w-[640px] drop-shadow-xl" />
+          <div className={`relative flex items-end justify-center ${s.photo ? "" : "-mb-6 md:mb-0"}`}>
+            {s.photo ? (
+              <div className="h-56 w-full max-w-[600px] overflow-hidden rounded-[20px] border-4 border-white shadow-xl sm:h-72 lg:h-[300px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={s.image} alt={s.alt} width={960} height={720} loading="lazy" decoding="async" className="size-full object-cover" style={{ objectPosition: s.focus ?? "center" }} />
+              </div>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={s.image} alt={s.alt} width={800} height={400} loading={idx === 0 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : undefined} className="w-full max-w-[640px] drop-shadow-xl" />
+            )}
             {s.seal && (
               <div className="absolute -top-2 right-0 hidden size-28 place-items-center rounded-full border-4 border-white bg-brand-700 text-center text-white shadow-xl sm:grid lg:size-32">
                 <span className="font-display text-2xl font-extrabold leading-none lg:text-3xl">
