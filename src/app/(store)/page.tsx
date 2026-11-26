@@ -27,8 +27,8 @@ export default async function HomePage() {
   ]);
   const cur = settings.currencySymbol;
   const slides: Slide[] = [
-    { title: "Fresh Fruits & Vegetables", accent: "Directly from Nature", subtitle: "Healthy Food. Happy Life.", cta: { href: "/shop", label: "Shop Now" }, image: "/images/photos/banner-vegetable-basket.jpg", alt: "A market stall piled with fresh vegetables", seal: "100% Fresh", photo: true, focus: "center 35%" },
-    { title: "Seasonal Fruits", accent: "Picked at Peak Ripeness", subtitle: "Himsagar mangoes, melons and more — only in season.", cta: { href: "/fruits", label: "Explore Fruits" }, image: "/images/photos/mango.jpg", alt: "Ripe Himsagar mangoes", photo: true },
+    { title: "Fresh Fruits & Vegetables", accent: "Directly from Nature", subtitle: "Healthy Food. Happy Life.", cta: { href: "/shop", label: "Shop Now" }, image: "/images/photos/banner-vegetable-basket.jpg", alt: "A wicker basket of pumpkin, sweet potatoes and fresh vegetables", seal: "100% Fresh", photo: true, focus: "center 62%" },
+    { title: "Seasonal Fruits", accent: "Picked at Peak Ripeness", subtitle: "Himsagar mangoes, melons and more — only in season.", cta: { href: "/fruits", label: "Explore Fruits" }, image: "/images/photos/mango.jpg", alt: "Ripe mangoes", photo: true, focus: "center 40%" },
     { title: "Spices & Pantry", accent: "Authentic Flavour", subtitle: "Turmeric, chili, cumin, dal and daily essentials.", cta: { href: "/spices", label: "Shop Spices" }, image: "/images/photos/banner-spices-cooking.jpg", alt: "Colourful mounds of ground spices", photo: true },
   ];
 

@@ -34,7 +34,7 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 
 - [ ] **Currency & market:** Admin → Settings. Default is `৳` / `BDT` (from the design). If the store operates in India (Karimganj, Assam) switch to `₹` / `INR` — and note SSLCommerz is a Bangladeshi gateway; an Indian gateway (e.g. Razorpay) would need to be added via `src/lib/services/payments.ts`.
 - [ ] **Catalog:** seeded prices are placeholders — review every price. Product, category and hero photos come from `website-images/` (copied to `public/images/photos/`); 55 products use them.
-- [ ] **Photo licences:** confirm you have the right to use each photo in `website-images/`. Several look like stock/Wikimedia images, which can require attribution (e.g. CC BY-SA). Two banners show foreign price tags (£ / French labels).
+- [ ] **Photo licences:** `website-images/image-list.md` credits a photographer/studio per photo, shown on `/about#photo-credits`. Confirm each photo's licence allows commercial use and whether that credit is sufficient. After changing photos, run `npm run photos` (syncs `public/images/photos/` and regenerates the credits).
 - [ ] **Store details:** phone, email, address, announcements, delivery slots (Admin → Settings); delivery areas & fees (Admin → Delivery).
 - [ ] **Policies:** `/terms`, `/privacy-policy`, `/refund-policy` contain starter text — have them reviewed.
 - [ ] **Coupons:** three starter coupons (FRESH20, WELCOME50, FREEDEL) exist — edit or delete in Admin → Coupons.
