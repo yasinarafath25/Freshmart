@@ -45,8 +45,8 @@ export type ProductFilters = {
 };
 
 // Aggregates over variants, computed per product in SQL.
-const minPriceSql = sql<number>`(select min(v.price) from product_variants v where v.product_id = ${products.id})`;
-const totalStockSql = sql<number>`(select coalesce(sum(v.stock),0) from product_variants v where v.product_id = ${products.id})`;
+const minPriceSql = sql<number>`(select min(v.price) from product_variants v where v.product_id = "products"."id")`;
+const totalStockSql = sql<number>`(select coalesce(sum(v.stock),0) from product_variants v where v.product_id = "products"."id")`;
 
 function filterWhere(f: ProductFilters): SQL | undefined {
   const conds: (SQL | undefined)[] = [eq(products.isActive, true)];
@@ -188,7 +188,7 @@ export async function listCategories(opts: { includeInactive?: boolean } = {}) {
   const rows = await db
     .select({
       c: categories,
-      productCount: sql<number>`(select count(*)::int from products p where p.category_id = ${categories.id} and p.is_active)`,
+      productCount: sql<number>`(select count(*)::int from products p where p.category_id = "categories"."id" and p.is_active)`,
     })
     .from(categories)
     .where(opts.includeInactive ? undefined : eq(categories.isActive, true))

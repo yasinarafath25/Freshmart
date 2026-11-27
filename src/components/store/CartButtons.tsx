@@ -9,6 +9,7 @@ import { buttonClass } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { useI18n } from "@/lib/i18n/client";
 import { toast } from "./Toaster";
+import { flyToCart } from "@/lib/fly-to-cart";
 
 export function AddToCartButton({
   variantId,
@@ -42,9 +43,11 @@ export function AddToCartButton({
       <button
         type="button"
         disabled={pending}
-        onClick={() =>
+        onClick={(e) => {
+          // Start the flight immediately; the server call runs in parallel.
+          const flight = flyToCart(e.currentTarget);
           start(async () => {
-            const res = await addToCartAction(variantId, quantity);
+            const [res] = await Promise.all([addToCartAction(variantId, quantity), flight]);
             if (res.ok) {
               setDone(true);
               setTimeout(() => setDone(false), 2000);
@@ -55,8 +58,8 @@ export function AddToCartButton({
             } else {
               toast({ tone: "error", message: res.code === "soldout" ? d.product.soldOutMsg : res.code === "unavailable" ? d.product.unavailable : d.product.invalid });
             }
-          })
-        }
+          });
+        }}
         className={buttonClass(done ? "outline" : "primary", size, "w-full")}
       >
         {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : done ? <Check className="size-4" aria-hidden /> : <ShoppingCart className="size-4" aria-hidden />}

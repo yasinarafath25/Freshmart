@@ -92,6 +92,7 @@ export async function Header() {
             </Link>
             <Link
               href="/cart"
+              data-cart-target
               className="relative grid size-11 place-items-center rounded-full bg-mint-50 text-brand-700 transition hover:bg-brand-100"
               aria-label={d.header.cartLabel(count)}
             >

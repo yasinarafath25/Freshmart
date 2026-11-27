@@ -246,7 +246,7 @@ export async function listUserOrders(userId: string, page = 1, perPage = 10) {
     db
       .select({
         o: orders,
-        itemCount: sql<number>`(select coalesce(sum(quantity),0)::int from order_items oi where oi.order_id = ${orders.id})`,
+        itemCount: sql<number>`(select coalesce(sum(quantity),0)::int from order_items oi where oi.order_id = "orders"."id")`,
       })
       .from(orders)
       .where(eq(orders.userId, userId))

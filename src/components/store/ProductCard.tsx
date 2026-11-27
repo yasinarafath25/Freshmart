@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui";
 import { useI18n } from "@/lib/i18n/client";
 import { AddToCartButton, WishlistButton } from "./CartButtons";
 
-export function ProductImage({ src, alt, className, priority }: { src: string | null; alt: string; className?: string; priority?: boolean }) {
+export function ProductImage({ src, alt, className, priority, fly }: { src: string | null; alt: string; className?: string; priority?: boolean; fly?: boolean }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- plain img: Next image optimiser is not available on Workers (TRD §11)
     <img
@@ -19,6 +19,7 @@ export function ProductImage({ src, alt, className, priority }: { src: string | 
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       decoding="async"
+      data-fly-img={fly ? "" : undefined}
       className={className}
     />
   );
@@ -31,10 +32,10 @@ export function ProductCard({ p, saved = false }: { p: ProductCardData; currency
   const name = lang === "bn" && p.nameBn ? p.nameBn : p.name;
   const badge = (label: string) => d.badges[label] ?? label;
   return (
-    <article className="group relative flex flex-col rounded-2xl border border-line bg-white p-3 shadow-card transition duration-200 hover:-translate-y-0.5 hover:shadow-card-hover">
+    <article data-fly-root className="group relative flex flex-col rounded-2xl border border-line bg-white p-3 shadow-card transition duration-200 hover:-translate-y-0.5 hover:shadow-card-hover">
       <div className="relative overflow-hidden rounded-xl bg-canvas">
         <Link href={`/product/${p.slug}`} tabIndex={-1} aria-hidden>
-          <ProductImage src={p.image} alt="" className="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.04]" />
+          <ProductImage fly src={p.image} alt="" className="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.04]" />
         </Link>
         <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
           {off > 0 && <Badge tone="sale">-{num(off)}%</Badge>}

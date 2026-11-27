@@ -92,10 +92,10 @@ export default async function ProductPage({ params }: Props) {
         </ol>
       </nav>
 
-      <div className="mt-5 grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div data-fly-root className="mt-5 grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div>
           <div className="relative overflow-hidden rounded-3xl border border-line bg-canvas">
-            <ProductImage src={p.images[0] ?? null} alt={name} priority className="aspect-square w-full object-cover" />
+            <ProductImage fly src={p.images[0] ?? null} alt={name} priority className="aspect-square w-full object-cover" />
             <div className="absolute left-4 top-4 flex gap-2">
               {p.freshnessLabel && <Badge tone="fresh">{i.d.badges[p.freshnessLabel] ?? p.freshnessLabel}</Badge>}
               {p.isOrganic && <Badge tone="organic"><Leaf className="size-3" aria-hidden /> {t.organic}</Badge>}

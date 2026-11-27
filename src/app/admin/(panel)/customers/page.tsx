@@ -32,9 +32,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     db
       .select({
         u: users,
-        orders: sql<number>`(select count(*)::int from orders o where o.user_id = ${users.id})`,
-        spent: sql<number>`(select coalesce(sum(total),0)::int from orders o where o.user_id = ${users.id} and o.status <> 'cancelled')`,
-        lastOrder: sql<Date | null>`(select max(created_at) from orders o where o.user_id = ${users.id})`,
+        orders: sql<number>`(select count(*)::int from orders o where o.user_id = "users"."id")`,
+        spent: sql<number>`(select coalesce(sum(total),0)::int from orders o where o.user_id = "users"."id" and o.status <> 'cancelled')`,
+        lastOrder: sql<Date | null>`(select max(created_at) from orders o where o.user_id = "users"."id")`,
       })
       .from(users)
       .where(where)

@@ -39,7 +39,7 @@ export default async function CategoriesPage() {
   const { allowed } = await requireStaffPage("products:write");
   if (!allowed) return <NoAccess />;
   const rows = await getDb()
-    .select({ c: categories, n: sql<number>`(select count(*)::int from products p where p.category_id = ${categories.id})` })
+    .select({ c: categories, n: sql<number>`(select count(*)::int from products p where p.category_id = "categories"."id")` })
     .from(categories)
     .orderBy(asc(categories.sortOrder), asc(categories.name));
   const all = rows.map((r) => r.c);

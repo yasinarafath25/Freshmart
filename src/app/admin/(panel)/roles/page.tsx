@@ -27,7 +27,7 @@ export default async function RolesPage() {
   const { allowed } = await requireStaffPage("roles:write");
   if (!allowed) return <NoAccess />;
   const rows = await getDb()
-    .select({ r: roles, members: sql<number>`(select count(*)::int from users u where u.staff_role_id = ${roles.id})` })
+    .select({ r: roles, members: sql<number>`(select count(*)::int from users u where u.staff_role_id = "roles"."id")` })
     .from(roles)
     .orderBy(asc(roles.name));
   return (

@@ -24,6 +24,7 @@ export function BottomNav({ cartCount, accountHref }: { cartCount: number; accou
           <li key={label}>
             <Link
               href={href}
+              data-cart-target={href === "/cart" ? "" : undefined}
               aria-current={active ? "page" : undefined}
               className={cn("relative flex h-16 flex-col items-center justify-center gap-0.5 text-[11px] font-medium", active ? "text-brand-700" : "text-ink-600")}
             >

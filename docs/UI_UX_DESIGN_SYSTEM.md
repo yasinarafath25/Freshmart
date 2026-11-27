@@ -154,6 +154,7 @@ Order: announcement bar → header (logo, pill search, deliver-to, account, cart
 ## 7b. Usability patterns
 
 - **Mobile bottom navigation** (Home, Shop, Search, Cart with count, Account); sticky action bars (add to cart, checkout total, place order) sit above it.
+- **Fly-to-cart:** on Add to Cart, a copy of the product photo arcs into the visible cart icon (header, or the bottom-nav cart when the header is scrolled away) and the icon bounces with a green ring. Skipped automatically when the user prefers reduced motion. Markup: `[data-fly-root]`, `[data-fly-img]`, `[data-cart-target]` (`src/lib/fly-to-cart.ts`).
 - **Toasts** confirm add-to-cart with a "View cart" shortcut; errors use the same component.
 - **Live search suggestions** with photos and prices, keyboard navigable; name matches rank above category matches.
 - **Active filter chips** on listings, removable one by one; filter count badge on mobile.

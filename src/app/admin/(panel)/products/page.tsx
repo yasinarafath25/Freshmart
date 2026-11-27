@@ -32,9 +32,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       .select({
         p: products,
         category: categories.name,
-        minPrice: sql<number>`(select min(price) from product_variants v where v.product_id = ${products.id})`,
-        stock: sql<number>`(select coalesce(sum(stock),0)::int from product_variants v where v.product_id = ${products.id})`,
-        variants: sql<number>`(select count(*)::int from product_variants v where v.product_id = ${products.id})`,
+        minPrice: sql<number>`(select min(price) from product_variants v where v.product_id = "products"."id")`,
+        stock: sql<number>`(select coalesce(sum(stock),0)::int from product_variants v where v.product_id = "products"."id")`,
+        variants: sql<number>`(select count(*)::int from product_variants v where v.product_id = "products"."id")`,
       })
       .from(products)
       .leftJoin(categories, eq(categories.id, products.categoryId))
