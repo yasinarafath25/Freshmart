@@ -26,7 +26,7 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 | `npm run smoke` | Hits every route against a running server (`BASE_URL` env, default localhost:3000) |
 | `npm run db:generate` / `db:migrate` | Create a migration from `src/lib/db/schema.ts` / apply migrations |
 | `npm run db:seed` | Idempotent seed (safe to re-run; never overwrites existing products) |
-| `npm run admin:create` | Create or promote a Super Admin: `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm run admin:create` |
+| `npm run admin:create` | Create a Super Admin or reset an admin password. Asks for email and password (hidden) — works in PowerShell, CMD and Bash; also clears a sign-in lockout and verifies the password |
 | `npm run art` | Regenerates the placeholder SVG product illustrations |
 | `npm run preview` / `deploy` | OpenNext build + local Workers preview / deploy to Cloudflare |
 
@@ -51,7 +51,7 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
    ```bash
    DATABASE_URL="postgres://…" npx drizzle-kit migrate
    DATABASE_URL="postgres://…" npx tsx scripts/seed.ts
-   DATABASE_URL="postgres://…" ADMIN_EMAIL=owner@yourdomain ADMIN_PASSWORD='a-long-password' npx tsx scripts/create-admin.ts
+   DATABASE_URL="postgres://…" npx tsx scripts/create-admin.ts      # asks for email + password
    ```
    (For a production catalog, you may skip the starter products by deleting them afterwards in the admin.)
 3. **Hyperdrive** (connection pooling for Workers):
