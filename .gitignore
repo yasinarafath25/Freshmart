@@ -9,3 +9,7 @@ node_modules
 .dev.vars
 *.tsbuildinfo
 next-env.d.ts
+
+# Personal notes with passwords — never commit
+freshmart-chabi/
+*chabi*

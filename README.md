@@ -44,7 +44,16 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 
 Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so nothing has to be built on Windows. Every push to `main` lints, typechecks, tests and builds; once the secrets below exist it also migrates the database, deploys and smoke-tests the live site.
 
-### 3.1 One-time setup
+### 3.0 Easiest: Render (same as the footwear site)
+
+1. render.com → **New → Web Service** → connect the GitHub repo `Freshmart`.
+2. Settings: Language **Node**, Region **Singapore**, Build Command `npm ci --include=dev && npm run render:build`, Start Command `npm start`.
+3. Environment variables: `DATABASE_URL` (Neon), `APP_URL` (`https://freshmart.ninestarbd.com`), `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+4. Custom domain: Render → Settings → Custom Domains → add `freshmart.ninestarbd.com`; in Cloudflare DNS add a **CNAME** `freshmart` → `<service>.onrender.com` (DNS only / grey cloud), like `shop`.
+
+Each deploy runs migrations and the (repeat-safe) seed before building. Notes: the free plan sleeps after ~15 minutes idle (first visit then takes about a minute); photos uploaded from the admin are stored on the server disk and are lost on redeploy — use `https://` image links or a paid disk.
+
+### 3.1 Cloudflare Workers via GitHub Actions — one-time setup
 
 1. **Database (Neon, free):** create a project at neon.tech → copy the connection string (it looks like `postgresql://user:pass@ep-…neon.tech/neondb?sslmode=require`).
 2. **Cloudflare account:** use the **same Cloudflare account that already holds `ninestarbd.com`**. Open *Workers & Pages* once, and note your **Account ID** (right sidebar of the dashboard).

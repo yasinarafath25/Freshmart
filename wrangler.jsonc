@@ -14,13 +14,7 @@
   "vars": {
     "SSLCOMMERZ_SANDBOX": "true"
   },
-  "observability": { "enabled": true },
-
-  // Live address. ninestarbd.com is already a Cloudflare zone, so Cloudflare creates the
-  // DNS record and HTTPS certificate for this subdomain automatically on deploy.
-  // The ninestarbd.com zone must be in the same Cloudflare account as CLOUDFLARE_ACCOUNT_ID.
-  // Changing it? Also update the APP_URL GitHub secret to match.
-  "routes": [{ "pattern": "freshmart.ninestarbd.com", "custom_domain": true }]
+  "observability": { "enabled": true }
 
   // ── Optional upgrades (uncomment after creating them; see README → Deployment) ──
   //
