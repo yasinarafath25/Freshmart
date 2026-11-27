@@ -44,7 +44,10 @@ async function call(method: string, body: Record<string, unknown>) {
     if (!res.ok || !json.ok) return { ok: false as const, error: json.description ?? `HTTP ${res.status}` };
     return { ok: true as const, result: json.result };
   } catch (e) {
-    return { ok: false as const, error: e instanceof Error ? e.message : "Network error" };
+    const msg = e instanceof Error ? e.message : "Network error";
+    if (/abort|timeout|fetch failed|ECONN|ENOTFOUND|ETIMEDOUT/i.test(msg))
+      return { ok: false as const, error: "Could not reach Telegram (api.telegram.org). This network seems to block Telegram — it will work on the live server, or here with a VPN." };
+    return { ok: false as const, error: msg };
   }
 }
 
