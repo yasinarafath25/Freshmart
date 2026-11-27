@@ -197,7 +197,8 @@ Headers set in `next.config.ts`: CSP, HSTS (prod), `X-Content-Type-Options`, `Re
 ## 15. Deployment architecture
 
 - Cloudflare Worker `freshmart` built with `opennextjs-cloudflare build`, deployed with `opennextjs-cloudflare deploy`.
-- Bindings (`wrangler.jsonc`): `ASSETS`, `HYPERDRIVE` (Postgres), `MEDIA` (R2), `WORKER_SELF_REFERENCE`.
+- Bindings (`wrangler.jsonc`): `ASSETS`, `WORKER_SELF_REFERENCE`; optional `HYPERDRIVE` (Postgres pooling) and `MEDIA` (R2 uploads). Without Hyperdrive the Worker opens one `pg` connection per request straight to `DATABASE_URL`; without R2, admin photo uploads are disabled (bundled photos and `https://` links still work).
+- CI/CD: GitHub Actions (`.github/workflows/deploy.yml`) on Linux — lint, typecheck, tests, OpenNext build, then (when secrets exist) migrate, seed, deploy, sync Worker secrets and smoke-test the live URL.
 - Environments: `development` (local embedded Postgres), `preview`/`staging` (separate DB branch + bucket), `production`.
 - CI: typecheck → lint → unit tests → build → migrate → deploy.
 - Full instructions: `README.md` → "Deployment".

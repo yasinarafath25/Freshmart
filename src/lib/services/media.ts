@@ -36,7 +36,12 @@ export async function storeImage(file: File): Promise<{ url: string } | { error:
   const type = sniff(buf);
   if (!type || !ALLOWED_IMAGE_TYPES[type]) return { error: "Only JPEG, PNG, WebP or AVIF images are allowed." };
   const key = `products/${crypto.randomUUID()}.${ALLOWED_IMAGE_TYPES[type]}`;
-  const r2 = getCfEnv()?.MEDIA;
+  const cf = getCfEnv();
+  const r2 = cf?.MEDIA;
+  if (cf && !r2) {
+    // On Cloudflare without an R2 bucket there is no writable disk.
+    return { error: "Photo uploads need Cloudflare R2 storage (see README → Deployment → R2). Meanwhile, paste an https:// image link instead." };
+  }
   if (r2) {
     await r2.put(key, buf.buffer as ArrayBuffer, { httpMetadata: { contentType: type } });
   } else {
@@ -51,9 +56,11 @@ export async function storeImage(file: File): Promise<{ url: string } | { error:
 
 export async function readImage(key: string): Promise<{ body: BodyInit; contentType: string } | null> {
   if (!isValidKey(key)) return null;
-  const r2 = getCfEnv()?.MEDIA;
+  const cf = getCfEnv();
+  const r2 = cf?.MEDIA;
   const ext = key.split(".").pop()!;
   const contentType = Object.entries(ALLOWED_IMAGE_TYPES).find(([, e]) => e === ext)?.[0] ?? "application/octet-stream";
+  if (cf && !r2) return null;
   if (r2) {
     const obj = await r2.get(key);
     if (!obj) return null;

@@ -40,60 +40,47 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
 - [ ] **Policies:** `/terms`, `/privacy-policy`, `/refund-policy` contain starter text — have them reviewed.
 - [ ] **Coupons:** three starter coupons (FRESH20, WELCOME50, FREEDEL) exist — edit or delete in Admin → Coupons.
 
-## 3. Production deployment (Cloudflare Workers)
+## 3. Production deployment (Cloudflare Workers via GitHub Actions)
 
-> **Windows note:** `opennextjs-cloudflare build` needs permission to create symlinks. On Windows run it from **WSL**, or enable Windows *Developer Mode*. (`next build` itself works natively.) CI on Linux has no such issue.
+Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so nothing has to be built on Windows. Every push to `main` lints, typechecks, tests and builds; once the secrets below exist it also migrates the database, deploys and smoke-tests the live site.
 
 ### 3.1 One-time setup
 
-1. **Database** — create a PostgreSQL 15+ database (Neon recommended; Supabase/RDS also fine). Note its connection string.
-2. **Run migrations & seed against it** (from your machine/CI):
-   ```bash
-   DATABASE_URL="postgres://…" npx drizzle-kit migrate
-   DATABASE_URL="postgres://…" npx tsx scripts/seed.ts
-   DATABASE_URL="postgres://…" npx tsx scripts/create-admin.ts      # asks for email + password
-   ```
-   (For a production catalog, you may skip the starter products by deleting them afterwards in the admin.)
-3. **Hyperdrive** (connection pooling for Workers):
-   ```bash
-   npx wrangler hyperdrive create freshmart-db --connection-string="postgres://…"
-   ```
-   Put the returned id into `wrangler.jsonc` → `hyperdrive[0].id`.
-4. **R2 bucket** for product photos:
-   ```bash
-   npx wrangler r2 bucket create freshmart-media
-   ```
-5. **Config & secrets** — set `APP_URL` in `wrangler.jsonc` `vars`, then:
-   ```bash
-   npx wrangler secret put RESEND_API_KEY            # optional, for password-reset emails
-   npx wrangler secret put EMAIL_FROM                # e.g. "FreshMart <orders@yourdomain>"
-   npx wrangler secret put SSLCOMMERZ_STORE_ID       # optional, enables online payment
-   npx wrangler secret put SSLCOMMERZ_STORE_PASSWORD
-   npx wrangler secret put TELEGRAM_BOT_TOKEN        # optional, order alerts on Telegram
-   npx wrangler secret put TELEGRAM_CHAT_ID
-   ```
-   Keep `SSLCOMMERZ_SANDBOX = "true"` until you have completed sandbox test payments.
+1. **Database (Neon, free):** create a project at neon.tech → copy the connection string (it looks like `postgresql://user:pass@ep-…neon.tech/neondb?sslmode=require`).
+2. **Cloudflare account:** sign up at dash.cloudflare.com → *Workers & Pages* once, so you get a `*.workers.dev` subdomain. Note your **Account ID** (right sidebar of the dashboard).
+3. **Cloudflare API token:** *My Profile → API Tokens → Create Token → "Edit Cloudflare Workers"* template → create → copy it.
+4. **GitHub secrets:** repository → *Settings → Secrets and variables → Actions → New repository secret*:
 
-### 3.2 Build & deploy
+| Secret | Value |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | token from step 3 |
+| `CLOUDFLARE_ACCOUNT_ID` | account id from step 2 |
+| `DATABASE_URL` | Neon connection string from step 1 |
+| `APP_URL` | `https://freshmart.<your-subdomain>.workers.dev` (or your own domain later) |
+| `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | optional — creates your first Super Admin on the first deploy |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | optional — order alerts on Telegram |
+| `RESEND_API_KEY`, `EMAIL_FROM` | optional — password-reset emails |
+| `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD` | optional — online payments (test in sandbox first) |
 
-```bash
-npm ci
-npm run lint && npm run typecheck && npm test
-npm run deploy          # opennextjs-cloudflare build && opennextjs-cloudflare deploy
-```
-Then attach your domain to the Worker (Cloudflare dashboard → Workers → freshmart → Domains).
+5. **Run it:** push to `main`, or GitHub → *Actions → Build & deploy → Run workflow*. Watch the run; the last step checks the live site.
+
+### 3.2 Optional upgrades
+
+- **Photo uploads from the admin (R2):** enable R2 in the Cloudflare dashboard, run `npx wrangler r2 bucket create freshmart-media`, then uncomment the `r2_buckets` block in `wrangler.jsonc`. Until then, products use the bundled photos or pasted `https://` image links.
+- **Hyperdrive (faster DB connections):** `npx wrangler hyperdrive create freshmart-db --connection-string="…"`, then uncomment the `hyperdrive` block with the printed id.
+- **Custom domain:** Workers & Pages → freshmart → *Domains & Routes*; then update the `APP_URL` secret.
 
 ### 3.3 Environment variable checklist
 
 | Variable | Where | Required |
 |---|---|---|
-| `APP_URL` | wrangler `vars` | **yes** — validated at startup |
-| `HYPERDRIVE` binding | wrangler `hyperdrive` | **yes** (production DB) |
-| `MEDIA` binding | wrangler `r2_buckets` | **yes** (image uploads) |
-| `DATABASE_URL` | local `.env.local` / CI only | for migrations & scripts |
-| `RESEND_API_KEY`, `EMAIL_FROM` | secret | optional (without it reset emails are only logged) |
-| `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD`, `SSLCOMMERZ_SANDBOX` | secret / var | optional (set both IDs or neither) |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | secret | optional — Telegram alert for every new order / customer cancellation. Setup steps and a test button: Admin → Settings |
+| `APP_URL` | GitHub secret → Worker secret | **yes** |
+| `DATABASE_URL` | GitHub secret → Worker secret (also used for migrations) | **yes** |
+| `HYPERDRIVE` binding | `wrangler.jsonc` | optional (recommended later) |
+| `MEDIA` binding (R2) | `wrangler.jsonc` | optional (needed for admin photo uploads) |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | GitHub secret → Worker secret | optional |
+| `RESEND_API_KEY`, `EMAIL_FROM` | GitHub secret → Worker secret | optional |
+| `SSLCOMMERZ_*` | GitHub secret → Worker secret | optional (set both ids or neither) |
 
 ### 3.4 Database migrations (later releases)
 
@@ -130,7 +117,7 @@ DATABASE_URL="postgres://…" npm run db:migrate   # run BEFORE deploying code t
 **Product photos:** the seed maps 55 products to the owner's photos and only replaces seed placeholder art, never images an admin uploaded. Re-run `npm run db:seed` on any database to apply.
 
 **Not verified / pending:**
-- OpenNext Workers build not run successfully on this Windows machine (symlink permission) — run in WSL/CI.
+- Cloudflare deploy runs in GitHub Actions; the first live deploy and the live Telegram test are pending until the secrets in §3.1 are added.
 - SSLCommerz integration is written against the public API but **untested** (no sandbox credentials).
 - Email sending (Resend) untested without an API key.
 - No audit-log viewer screen yet (rows are written to `audit_logs`).

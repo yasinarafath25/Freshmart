@@ -1,6 +1,6 @@
 {
   // Cloudflare Worker for FreshMart (Next.js via @opennextjs/cloudflare).
-  // Replace the placeholder IDs below with your own (see README → Deployment).
+  // Secrets (DATABASE_URL, APP_URL, TELEGRAM_*, …) are set by the GitHub deploy workflow — never put them here.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "freshmart",
   "main": ".open-next/worker.js",
@@ -11,20 +11,18 @@
     "binding": "ASSETS"
   },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "freshmart" }],
-  "hyperdrive": [
-    {
-      "binding": "HYPERDRIVE",
-      "id": "REPLACE_WITH_HYPERDRIVE_ID",
-      // Used by `wrangler dev` / `opennextjs-cloudflare preview` locally:
-      "localConnectionString": "postgres://postgres:postgres@localhost:54329/freshmart"
-    }
-  ],
-  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "freshmart-media" }],
   "vars": {
-    "APP_URL": "https://REPLACE_WITH_YOUR_DOMAIN",
     "SSLCOMMERZ_SANDBOX": "true"
   },
   "observability": { "enabled": true }
-  // Secrets (never put them here): wrangler secret put SESSION_SECRET / RESEND_API_KEY / EMAIL_FROM /
-  // SSLCOMMERZ_STORE_ID / SSLCOMMERZ_STORE_PASSWORD
+
+  // ── Optional upgrades (uncomment after creating them; see README → Deployment) ──
+  //
+  // Faster database connections through Hyperdrive:
+  //   npx wrangler hyperdrive create freshmart-db --connection-string="postgres://…"
+  // "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<id printed by the command>" }],
+  //
+  // Photo uploads from the admin panel (Cloudflare R2 must be enabled on the account):
+  //   npx wrangler r2 bucket create freshmart-media
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "freshmart-media" }],
 }
