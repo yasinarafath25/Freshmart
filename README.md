@@ -51,7 +51,7 @@ Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so n
 3. Environment variables: `DATABASE_URL` (Neon), `APP_URL` (`https://freshmart.ninestarbd.com`), `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
 4. Custom domain: Render → Settings → Custom Domains → add `freshmart.ninestarbd.com`; in Cloudflare DNS add a **CNAME** `freshmart` → `<service>.onrender.com` (DNS only / grey cloud), like `shop`.
 
-Each deploy runs migrations and the (repeat-safe) seed before building. Notes: the free plan sleeps after ~15 minutes idle (first visit then takes about a minute); photos uploaded from the admin are stored on the server disk and are lost on redeploy — use `https://` image links or a paid disk.
+Each deploy runs migrations and the (repeat-safe) seed before building. Notes: the free plan sleeps after ~15 minutes idle (first visit then takes about a minute); photos uploaded from the admin are shrunk in the browser (~200 KB each) and stored in the database (`media` table), so they survive redeploys.
 
 ### 3.1 Cloudflare Workers via GitHub Actions — one-time setup
 

@@ -1,9 +1,15 @@
 import "server-only";
+import { eq } from "drizzle-orm";
 import { getCfEnv } from "@/lib/utils/cf";
+import { getDb } from "@/lib/db/client";
+import { media } from "@/lib/db/schema";
 
 /**
- * Image storage. Production: Cloudflare R2 bucket bound as MEDIA.
- * Development (plain Node): files under ./.data/uploads. Served by /media/[...key].
+ * Image storage, served by /media/[...key].
+ * - Cloudflare R2 bucket bound as MEDIA, when present.
+ * - Otherwise the `media` table in PostgreSQL — survives redeploys on hosts with no
+ *   persistent disk (Render free, Workers). Photos are shrunk in the browser before upload.
+ * - Older uploads saved under ./.data/uploads are still served (read-only fallback).
  */
 export const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -36,20 +42,11 @@ export async function storeImage(file: File): Promise<{ url: string } | { error:
   const type = sniff(buf);
   if (!type || !ALLOWED_IMAGE_TYPES[type]) return { error: "Only JPEG, PNG, WebP or AVIF images are allowed." };
   const key = `products/${crypto.randomUUID()}.${ALLOWED_IMAGE_TYPES[type]}`;
-  const cf = getCfEnv();
-  const r2 = cf?.MEDIA;
-  if (cf && !r2) {
-    // On Cloudflare without an R2 bucket there is no writable disk.
-    return { error: "Photo uploads need Cloudflare R2 storage (see README → Deployment → R2). Meanwhile, paste an https:// image link instead." };
-  }
+  const r2 = getCfEnv()?.MEDIA;
   if (r2) {
     await r2.put(key, buf.buffer as ArrayBuffer, { httpMetadata: { contentType: type } });
   } else {
-    const fs = await import("node:fs/promises");
-    const path = await import("node:path");
-    const full = path.join(process.cwd(), ".data", "uploads", key);
-    await fs.mkdir(path.dirname(full), { recursive: true });
-    await fs.writeFile(full, buf);
+    await getDb().insert(media).values({ key, contentType: type, size: buf.byteLength, data: Buffer.from(buf) });
   }
   return { url: `/media/${key}` };
 }
@@ -60,12 +57,13 @@ export async function readImage(key: string): Promise<{ body: BodyInit; contentT
   const r2 = cf?.MEDIA;
   const ext = key.split(".").pop()!;
   const contentType = Object.entries(ALLOWED_IMAGE_TYPES).find(([, e]) => e === ext)?.[0] ?? "application/octet-stream";
-  if (cf && !r2) return null;
   if (r2) {
     const obj = await r2.get(key);
-    if (!obj) return null;
-    return { body: obj.body, contentType: obj.httpMetadata?.contentType ?? contentType };
+    if (obj) return { body: obj.body, contentType: obj.httpMetadata?.contentType ?? contentType };
   }
+  const row = await getDb().query.media.findFirst({ where: eq(media.key, key) });
+  if (row) return { body: new Uint8Array(row.data), contentType: row.contentType };
+  if (cf) return null;
   try {
     const fs = await import("node:fs/promises");
     const path = await import("node:path");

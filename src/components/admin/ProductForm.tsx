@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, Plus, Star, Trash2 } from "lucide-react";
 import { saveProductAction, uploadImageAction, type AdminState } from "@/app/admin/actions";
 import { Alert, Button, ButtonLink, Card, Checkbox, Field, Input, Select, Textarea } from "@/components/ui";
 import { keepValues } from "@/lib/utils/form";
+import { compressImage } from "@/lib/compress-image";
 
 type V = { id?: string; name: string; sku: string; price: string; compareAtPrice: string; stock: string; isDefault: boolean };
 export type ProductFormValues = {
@@ -136,7 +137,7 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
               setUploadError(null);
               startUpload(async () => {
                 const fd = new FormData();
-                fd.set("file", f);
+                fd.set("file", await compressImage(f));
                 const res = await uploadImageAction(fd);
                 if (res.url) setImages((im) => [...im, res.url!]);
                 else setUploadError(res.error ?? "Upload failed.");
@@ -148,7 +149,7 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
             <Input value={urlInput} onChange={(ev) => setUrlInput(ev.target.value)} placeholder="…or paste an https:// image URL" aria-label="Image URL" />
             <Button type="button" variant="secondary" onClick={() => { if (/^https:\/\/|^\/images\//.test(urlInput) && images.length < 8) { setImages((im) => [...im, urlInput]); setUrlInput(""); } }}>Add</Button>
           </div>
-          <p className="text-xs text-ink-600">JPEG, PNG, WebP or AVIF up to 5 MB. Square photos (at least 800×800) look best.</p>
+          <p className="text-xs text-ink-600">JPEG, PNG, WebP or AVIF. Big phone photos are shrunk automatically before upload. Square photos look best.</p>
         </Card>
       </div>
 

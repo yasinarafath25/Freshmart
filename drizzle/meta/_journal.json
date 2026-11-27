@@ -15,6 +15,13 @@
       "when": 1795735753973,
       "tag": "0001_bangla_names",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795772834753,
+      "tag": "0002_media",
+      "breakpoints": true
     }
   ]
 }
