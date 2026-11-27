@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { notifyOrderCancelled } from "@/lib/services/telegram";
 import { and, eq, isNull, ne } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db/client";
@@ -101,6 +103,9 @@ export async function cancelMyOrderAction(_: AccountState, formData: FormData): 
   }
   revalidatePath(`/account/orders/${id.data}`);
   revalidatePath("/account/orders");
+  const orderId = id.data;
+  const why = reason.success ? reason.data : "";
+  after(() => notifyOrderCancelled(orderId, why));
   return { ok: true, message: "Your order has been cancelled." };
 }
 

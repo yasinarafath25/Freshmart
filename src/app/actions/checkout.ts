@@ -1,6 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+import { notifyNewOrder } from "@/lib/services/telegram";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db/client";
@@ -108,5 +110,8 @@ export async function placeOrderAction(_: CheckoutState, formData: FormData): Pr
     console.error("[checkout] placeOrder failed", e);
     return { message: "Something went wrong while placing your order. You have not been charged. Please try again." };
   }
+  // Alert the store team on Telegram after the response is sent (never blocks or fails checkout).
+  const newOrderId = order.id;
+  after(() => notifyNewOrder(newOrderId));
   redirect(order.paymentMethod === "sslcommerz" ? `/checkout/pay/${order.orderNumber}` : `/checkout/success/${order.orderNumber}`);
 }

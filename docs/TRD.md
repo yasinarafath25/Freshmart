@@ -232,4 +232,5 @@ Headers set in `next.config.ts`: CSP, HSTS (prod), `X-Content-Type-Options`, `Re
 | PostgreSQL provider (Neon recommended) | Required | Any PG 15+ reachable by Hyperdrive |
 | SSLCommerz | Optional, disabled until configured | Implemented per public v4 API; **must be verified in sandbox before enabling** |
 | Resend | Optional | Password reset & order emails |
+| Telegram Bot API | Optional | New-order and customer-cancellation alerts to the store team (`src/lib/services/telegram.ts`), sent after the response via `after()` so checkout never waits or fails on it |
 | Google Fonts via `next/font` | Build-time | Self-hosted at build |

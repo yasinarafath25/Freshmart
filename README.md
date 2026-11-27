@@ -69,6 +69,8 @@ npm run dev                         # http://localhost:3000  ·  admin: http://l
    npx wrangler secret put EMAIL_FROM                # e.g. "FreshMart <orders@yourdomain>"
    npx wrangler secret put SSLCOMMERZ_STORE_ID       # optional, enables online payment
    npx wrangler secret put SSLCOMMERZ_STORE_PASSWORD
+   npx wrangler secret put TELEGRAM_BOT_TOKEN        # optional, order alerts on Telegram
+   npx wrangler secret put TELEGRAM_CHAT_ID
    ```
    Keep `SSLCOMMERZ_SANDBOX = "true"` until you have completed sandbox test payments.
 
@@ -91,6 +93,7 @@ Then attach your domain to the Worker (Cloudflare dashboard → Workers → fres
 | `DATABASE_URL` | local `.env.local` / CI only | for migrations & scripts |
 | `RESEND_API_KEY`, `EMAIL_FROM` | secret | optional (without it reset emails are only logged) |
 | `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD`, `SSLCOMMERZ_SANDBOX` | secret / var | optional (set both IDs or neither) |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | secret | optional — Telegram alert for every new order / customer cancellation. Setup steps and a test button: Admin → Settings |
 
 ### 3.4 Database migrations (later releases)
 

@@ -280,6 +280,7 @@ export async function updateOrderStatusAction(_: AdminState, formData: FormData)
   await audit(user.id, `status:${parsed.data.status}`, "order", parsed.data.orderId);
   revalidatePath(`/admin/orders/${parsed.data.orderId}`);
   revalidatePath("/admin/orders");
+  revalidatePath("/admin/dashboard");
   return { ok: true, message: "Order updated." };
 }
 
@@ -565,4 +566,26 @@ export async function markMessageHandledAction(formData: FormData) {
   if (!id.success) return;
   await getDb().update(contactMessages).set({ isHandled: formData.get("handled") !== "0" }).where(eq(contactMessages.id, id.data));
   revalidatePath("/admin/messages");
+}
+
+// ─── Telegram ───────────────────────────────────────────────────────────────
+export async function sendTelegramTestAction(): Promise<AdminState> {
+  const user = await guard("settings:write");
+  if (!user) return DENIED;
+  const { sendTelegram, telegramStatus } = await import("@/lib/services/telegram");
+  const st = telegramStatus();
+  if (!st.hasToken) return { ok: false, message: "TELEGRAM_BOT_TOKEN is not set yet (see the steps below)." };
+  if (!st.chatCount) return { ok: false, message: "TELEGRAM_CHAT_ID is not set yet. Use “Find my chat ID” first." };
+  const res = await sendTelegram(`✅ <b>FreshMart test</b>\nTelegram alerts are working. New orders will appear here.\n— sent by ${user.name}`);
+  return res.ok ? { ok: true, message: "Test message sent — check Telegram." } : { ok: false, message: `Telegram error: ${res.error}` };
+}
+
+export async function findTelegramChatsAction(): Promise<{ ok: boolean; message?: string; chats?: { id: string; name: string; type: string }[] }> {
+  const user = await guard("settings:write");
+  if (!user) return { ok: false, message: "You don’t have permission to do this." };
+  const { findTelegramChats } = await import("@/lib/services/telegram");
+  const res = await findTelegramChats();
+  if (!res.ok) return { ok: false, message: `Telegram error: ${res.error}` };
+  if (res.chats.length === 0) return { ok: true, chats: [], message: "No chats found. Send any message (e.g. “hi”) to your bot in Telegram, then try again." };
+  return { ok: true, chats: res.chats };
 }

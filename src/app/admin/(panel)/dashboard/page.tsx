@@ -12,6 +12,7 @@ import { NoAccess, PageHeader, StatCard, Table, td } from "@/components/admin/ui
 import { BarChart, RankBars } from "@/components/admin/Chart";
 import { Card } from "@/components/ui";
 import { OrderStatusBadge, PaymentStatusBadge } from "@/components/store/OrderBits";
+import { QuickAdvance } from "@/components/admin/OrderControls";
 
 export const metadata = { title: "Dashboard" };
 
@@ -74,7 +75,7 @@ export default async function DashboardPage() {
               <tr key={o.id} className="hover:bg-canvas">
                 <td className={td}><Link href={`/admin/orders/${o.id}`} className="font-semibold text-brand-700 hover:underline">{o.orderNumber}</Link><span className="block text-xs text-ink-400">{o.createdAt.toLocaleString("en-GB")}</span></td>
                 <td className={td}>{customer}</td>
-                <td className={td}><OrderStatusBadge status={o.status} /></td>
+                <td className={td}><div className="flex flex-col items-start gap-2"><OrderStatusBadge status={o.status} /><QuickAdvance orderId={o.id} status={o.status} /></div></td>
                 <td className={td}><PaymentStatusBadge status={o.paymentStatus} /></td>
                 <td className={`${td} font-semibold tabular-nums`}>{fmt(o.total)}</td>
               </tr>

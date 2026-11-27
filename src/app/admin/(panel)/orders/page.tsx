@@ -7,6 +7,7 @@ import { getSettings } from "@/lib/services/settings";
 import { formatMoney } from "@/lib/utils/money";
 import { FilterBar, NoAccess, PageHeader, Pager, Table, filterInput, td } from "@/components/admin/ui";
 import { OrderStatusBadge, PaymentStatusBadge } from "@/components/store/OrderBits";
+import { QuickAdvance } from "@/components/admin/OrderControls";
 
 export const metadata = { title: "Orders" };
 type SP = { status?: string; payment?: string; q?: string; from?: string; to?: string; page?: string };
@@ -58,7 +59,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
             <td className={td}><Link href={`/admin/orders/${o.id}`} className="font-semibold text-brand-700 hover:underline">{o.orderNumber}</Link><span className="block text-xs text-ink-400">{o.createdAt.toLocaleString("en-GB")}</span></td>
             <td className={td}>{o.shipName}<span className="block text-xs text-ink-400">{email}</span></td>
             <td className={td}>{o.zoneName}<span className="block text-xs text-ink-400">{o.deliveryDate} · {o.deliverySlot}</span></td>
-            <td className={td}><OrderStatusBadge status={o.status} /></td>
+            <td className={td}><div className="flex flex-col items-start gap-2"><OrderStatusBadge status={o.status} /><QuickAdvance orderId={o.id} status={o.status} /></div></td>
             <td className={td}><PaymentStatusBadge status={o.paymentStatus} /><span className="block text-xs text-ink-400">{o.paymentMethod === "cod" ? "COD" : "Online"}</span></td>
             <td className={`${td} font-semibold tabular-nums`}>{formatMoney(o.total, settings.currencySymbol)}</td>
           </tr>

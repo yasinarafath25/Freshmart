@@ -63,7 +63,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
           )}
         </div>
         <div className="space-y-4">
-          <Card className="p-5"><h2 className="mb-3 font-semibold">Update status</h2><StatusControl orderId={order.id} next={[...next]} /></Card>
+          <Card className={`p-5 ${order.status === "pending" ? "ring-2 ring-sun-400" : ""}`}><h2 className="mb-1 font-semibold">Update status</h2>{order.status === "pending" && <p className="mb-3 text-sm text-amber-800">New order — confirm it so the customer knows it’s accepted.</p>}<StatusControl orderId={order.id} status={order.status} next={[...next]} /></Card>
           {order.paymentMethod === "cod" && order.paymentStatus !== "paid" && order.status !== "cancelled" && <Card className="p-5"><h2 className="mb-3 font-semibold">Cash on delivery</h2><MarkPaid orderId={order.id} /></Card>}
           <OrderTotals order={order} currency={cur} />
           <Card className="p-5 text-sm">

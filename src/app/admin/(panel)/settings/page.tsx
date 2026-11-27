@@ -5,6 +5,8 @@ import { AdminForm } from "@/components/admin/AdminForm";
 import { AField, ATextarea } from "@/components/admin/fields";
 import { Card, Checkbox } from "@/components/ui";
 import { saveSettingsAction } from "@/app/admin/actions";
+import { TelegramCard } from "@/components/admin/TelegramCard";
+import { telegramStatus } from "@/lib/services/telegram";
 
 export const metadata = { title: "Settings" };
 
@@ -16,6 +18,7 @@ export default async function SettingsPage() {
   return (
     <>
       <PageHeader title="Store settings" description="Changes apply to the storefront immediately." />
+      <div className="mb-6"><TelegramCard {...(({ hasToken, chatCount }) => ({ hasToken, chatCount }))(telegramStatus())} /></div>
       <AdminForm action={saveSettingsAction} submitLabel="Save settings" className="max-w-4xl">
         <Card className="grid gap-4 p-6 sm:grid-cols-2">
           <h2 className="font-semibold sm:col-span-2">Brand</h2>
