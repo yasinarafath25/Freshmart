@@ -6,6 +6,7 @@ import { requireStaffPage } from "@/lib/auth/guards";
 import { getDb } from "@/lib/db/client";
 import { categories, productVariants, products } from "@/lib/db/schema";
 import { getSettings } from "@/lib/services/settings";
+import { getI18n } from "@/lib/i18n/server";
 import { NoAccess, PageHeader } from "@/components/admin/ui";
 import { ProductForm } from "@/components/admin/ProductForm";
 
@@ -21,18 +22,18 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   const db = getDb();
   const p = await db.query.products.findFirst({ where: eq(products.id, id) });
   if (!p) notFound();
-  const [vs, cats, settings] = await Promise.all([
+  const [vs, cats, settings, { t, name }] = await Promise.all([
     db.select().from(productVariants).where(eq(productVariants.productId, id)).orderBy(asc(productVariants.sortOrder)),
     db.select().from(categories).orderBy(asc(categories.sortOrder)),
     getSettings(),
+    getI18n(),
   ]);
   return (
     <>
-      <Link href="/admin/products" className="text-sm text-ink-600 hover:text-brand-700">← Products</Link>
-      <PageHeader title={`Edit: ${p.name}`} actions={<Link href={`/product/${p.slug}`} target="_blank" className="text-sm font-semibold text-brand-700 hover:underline">View in store ↗</Link>} />
+      <PageHeader back={{ href: "/admin/products", label: t("Products", "পণ্য") }} title={t(`Edit: ${p.name}`, `এডিট: ${name(p)}`)} actions={<Link href={`/product/${p.slug}`} target="_blank" className="text-sm font-semibold text-brand-700 hover:underline">{t("View in store ↗", "স্টোরে দেখুন ↗")}</Link>} />
       <ProductForm
         currency={settings.currencySymbol}
-        categories={cats.map((c) => ({ id: c.id, name: c.name, parentId: c.parentId }))}
+        categories={cats.map((c) => ({ id: c.id, name: c.name, nameBn: c.nameBn, parentId: c.parentId }))}
         initial={{
           id: p.id,
           name: p.name,

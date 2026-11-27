@@ -6,6 +6,7 @@ import { saveProductAction, uploadImageAction, type AdminState } from "@/app/adm
 import { Alert, Button, ButtonLink, Card, Checkbox, Field, Input, Select, Textarea } from "@/components/ui";
 import { keepValues } from "@/lib/utils/form";
 import { compressImage } from "@/lib/compress-image";
+import { useI18n } from "@/lib/i18n/client";
 
 type V = { id?: string; name: string; sku: string; price: string; compareAtPrice: string; stock: string; isDefault: boolean };
 export type ProductFormValues = {
@@ -29,8 +30,10 @@ export type ProductFormValues = {
 
 const UNITS = ["kg", "g", "piece", "dozen", "bunch", "pack", "litre", "ml"];
 
-export function ProductForm({ initial, categories, currency }: { initial: ProductFormValues; categories: { id: string; name: string; parentId: string | null }[]; currency: string }) {
-  const [state, action, pending] = useActionState<AdminState, FormData>(saveProductAction, null);
+export function ProductForm({ initial, categories, currency }: { initial: ProductFormValues; categories: { id: string; name: string; nameBn?: string | null; parentId: string | null }[]; currency: string }) {
+  const [raw, action, pending] = useActionState<AdminState, FormData>(saveProductAction, null);
+  const { t, st, unit, lang } = useI18n();
+  const state = st(raw);
   const [variants, setVariants] = useState<V[]>(initial.variants.length ? initial.variants : [{ name: "1 kg", sku: "", price: "", compareAtPrice: "", stock: "0", isDefault: true }]);
   const [images, setImages] = useState<string[]>(initial.images);
   const [uploading, startUpload] = useTransition();
@@ -58,42 +61,42 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
       <div className="space-y-6">
         {state?.message && <Alert tone={state.ok ? "success" : "error"}>{state.message}</Alert>}
         <Card className="space-y-4 p-6">
-          <h2 className="font-semibold">Basic information</h2>
+          <h2 className="font-semibold">{t("Basic information", "পণ্যের তথ্য")}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Product name (English)" htmlFor="name" error={e.name}><Input id="name" name="name" defaultValue={initial.name} required error={e.name} /></Field>
-            <Field label="পণ্যের নাম (বাংলা)" htmlFor="nameBn" error={e.nameBn} hint="Shown when the shop is in Bangla"><Input id="nameBn" name="nameBn" lang="bn" defaultValue={initial.nameBn} error={e.nameBn} /></Field>
+            <Field label={t("Product name (English)", "পণ্যের নাম (ইংরেজি)")} htmlFor="name" error={e.name}><Input id="name" name="name" defaultValue={initial.name} required error={e.name} /></Field>
+            <Field label="পণ্যের নাম (বাংলা)" htmlFor="nameBn" error={e.nameBn} hint={t("Shown when the shop is in Bangla", "দোকান বাংলায় থাকলে এই নাম দেখাবে")}><Input id="nameBn" name="nameBn" lang="bn" defaultValue={initial.nameBn} error={e.nameBn} /></Field>
           </div>
-          <Field label="URL slug" htmlFor="slug" error={e.slug} hint="Leave empty to generate from the name."><Input id="slug" name="slug" defaultValue={initial.slug} error={e.slug} /></Field>
-          <Field label="Description (English)" htmlFor="description" error={e.description}><Textarea id="description" name="description" defaultValue={initial.description} className="min-h-28" /></Field>
+          <Field label={t("URL slug", "লিংকের নাম (slug)")} htmlFor="slug" error={e.slug} hint={t("Leave empty to generate from the name.", "খালি রাখলে নাম থেকে নিজেই তৈরি হবে।")}><Input id="slug" name="slug" defaultValue={initial.slug} error={e.slug} /></Field>
+          <Field label={t("Description (English)", "বিবরণ (ইংরেজি)")} htmlFor="description" error={e.description}><Textarea id="description" name="description" defaultValue={initial.description} className="min-h-28" /></Field>
           <Field label="বিবরণ (বাংলা)" htmlFor="descriptionBn" error={e.descriptionBn}><Textarea id="descriptionBn" name="descriptionBn" lang="bn" defaultValue={initial.descriptionBn} className="min-h-28" /></Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Origin" htmlFor="origin"><Input id="origin" name="origin" defaultValue={initial.origin} placeholder="e.g. Local farms" /></Field>
-            <Field label="Freshness badge" htmlFor="freshnessLabel" hint="Shown on the card, e.g. Fresh, Organic, Seasonal"><Input id="freshnessLabel" name="freshnessLabel" defaultValue={initial.freshnessLabel} /></Field>
+            <Field label={t("Origin", "কোথা থেকে এসেছে")} htmlFor="origin"><Input id="origin" name="origin" defaultValue={initial.origin} placeholder={t("e.g. Local farms", "যেমন: স্থানীয় খামার")} /></Field>
+            <Field label={t("Freshness badge", "তাজা ব্যাজ")} htmlFor="freshnessLabel" hint={t("Shown on the card, e.g. Fresh, Organic, Seasonal", "কার্ডে দেখাবে, যেমন Fresh, Organic")}><Input id="freshnessLabel" name="freshnessLabel" defaultValue={initial.freshnessLabel} /></Field>
           </div>
         </Card>
 
         <Card className="space-y-4 p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold">Variants, prices &amp; stock</h2>
+            <h2 className="font-semibold">{t("Sizes, prices & stock", "সাইজ, দাম ও স্টক")}</h2>
             <Button type="button" variant="secondary" size="sm" onClick={() => setVariants((vs) => [...vs, { name: "", sku: "", price: "", compareAtPrice: "", stock: "0", isDefault: vs.length === 0 }])}>
-              <Plus className="size-4" aria-hidden /> Add variant
+              <Plus className="size-4" aria-hidden /> {t("Add size", "সাইজ যোগ করুন")}
             </Button>
           </div>
-          <p className="text-xs text-ink-600">Prices in {currency}. “Compare at” shows a strike-through price and discount badge when higher than the price.</p>
+          <p className="text-xs text-ink-600">{t(`Prices in ${currency}. “Old price” shows a strike-through price and discount badge when higher than the price.`, `দাম ${currency}-এ। “আগের দাম” বেশি দিলে কেটে দেওয়া দাম আর ছাড়ের ব্যাজ দেখাবে।`)}</p>
           <div className="space-y-3">
             {variants.map((v, i) => (
               <fieldset key={i} className="grid grid-cols-2 gap-3 rounded-xl border border-line p-3 md:grid-cols-[1.2fr_1fr_0.8fr_0.8fr_0.6fr_auto]">
-                <legend className="sr-only">Variant {i + 1}</legend>
-                <Field label="Name" htmlFor={`vn-${i}`}><Input id={`vn-${i}`} value={v.name} onChange={(ev) => setV(i, { name: ev.target.value })} placeholder="1 kg" required /></Field>
+                <legend className="sr-only">{t(`Variant ${i + 1}`, `ভ্যারিয়েন্ট ${i + 1}`)}</legend>
+                <Field label={t("Size / weight", "সাইজ / ওজন")} htmlFor={`vn-${i}`}><Input id={`vn-${i}`} value={v.name} onChange={(ev) => setV(i, { name: ev.target.value })} placeholder="1 kg" required /></Field>
                 <Field label="SKU" htmlFor={`vs-${i}`}><Input id={`vs-${i}`} value={v.sku} onChange={(ev) => setV(i, { sku: ev.target.value.toUpperCase() })} required /></Field>
-                <Field label="Price" htmlFor={`vp-${i}`}><Input id={`vp-${i}`} type="number" min={0} step="0.01" value={v.price} onChange={(ev) => setV(i, { price: ev.target.value })} required /></Field>
-                <Field label="Compare at" htmlFor={`vc-${i}`}><Input id={`vc-${i}`} type="number" min={0} step="0.01" value={v.compareAtPrice} onChange={(ev) => setV(i, { compareAtPrice: ev.target.value })} /></Field>
-                <Field label="Stock" htmlFor={`vk-${i}`}><Input id={`vk-${i}`} type="number" min={0} step="1" value={v.stock} onChange={(ev) => setV(i, { stock: ev.target.value })} /></Field>
+                <Field label={t("Price", "দাম")} htmlFor={`vp-${i}`}><Input id={`vp-${i}`} type="number" min={0} step="0.01" value={v.price} onChange={(ev) => setV(i, { price: ev.target.value })} required /></Field>
+                <Field label={t("Old price", "আগের দাম")} htmlFor={`vc-${i}`}><Input id={`vc-${i}`} type="number" min={0} step="0.01" value={v.compareAtPrice} onChange={(ev) => setV(i, { compareAtPrice: ev.target.value })} /></Field>
+                <Field label={t("Stock", "স্টক")} htmlFor={`vk-${i}`}><Input id={`vk-${i}`} type="number" min={0} step="1" value={v.stock} onChange={(ev) => setV(i, { stock: ev.target.value })} /></Field>
                 <div className="flex items-end gap-1 pb-0.5">
-                  <button type="button" onClick={() => setV(i, { isDefault: true })} className={`grid size-11 place-items-center rounded-lg ${v.isDefault ? "text-sun-400" : "text-ink-400 hover:text-ink-900"}`} aria-label="Make default variant" aria-pressed={v.isDefault} title="Default variant">
+                  <button type="button" onClick={() => setV(i, { isDefault: true })} className={`grid size-11 place-items-center rounded-lg ${v.isDefault ? "text-sun-400" : "text-ink-400 hover:text-ink-900"}`} aria-label={t("Make default variant", "ডিফল্ট হিসেবে রাখুন")} aria-pressed={v.isDefault} title={t("Default variant", "ডিফল্ট")}>
                     <Star className={`size-5 ${v.isDefault ? "fill-sun-400" : ""}`} />
                   </button>
-                  <button type="button" disabled={variants.length === 1} onClick={() => setVariants((vs) => { const n = vs.filter((_, j) => j !== i); if (!n.some((x) => x.isDefault) && n[0]) n[0] = { ...n[0], isDefault: true }; return n; })} className="grid size-11 place-items-center rounded-lg text-ink-400 hover:text-tomato-600 disabled:opacity-30" aria-label="Remove variant">
+                  <button type="button" disabled={variants.length === 1} onClick={() => setVariants((vs) => { const n = vs.filter((_, j) => j !== i); if (!n.some((x) => x.isDefault) && n[0]) n[0] = { ...n[0], isDefault: true }; return n; })} className="grid size-11 place-items-center rounded-lg text-ink-400 hover:text-tomato-600 disabled:opacity-30" aria-label={t("Remove variant", "মুছে ফেলুন")}>
                     <Trash2 className="size-5" />
                   </button>
                 </div>
@@ -103,23 +106,23 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
         </Card>
 
         <Card className="space-y-4 p-6">
-          <h2 className="font-semibold">Images</h2>
+          <h2 className="font-semibold">{t("Photos", "ছবি")}</h2>
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5">
             {images.map((src, i) => (
               <li key={src} className="group relative overflow-hidden rounded-xl border border-line">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={src} alt="" className="aspect-square w-full object-cover" />
-                {i === 0 && <span className="absolute left-1 top-1 rounded bg-brand-700 px-1.5 text-[10px] font-semibold text-white">Main</span>}
+                {i === 0 && <span className="absolute left-1 top-1 rounded bg-brand-700 px-1.5 text-[10px] font-semibold text-white">{t("Main", "প্রধান")}</span>}
                 <div className="absolute inset-x-0 bottom-0 flex justify-between bg-white/90 p-1 text-xs">
-                  {i > 0 ? <button type="button" className="font-semibold text-brand-700" onClick={() => setImages((im) => [src, ...im.filter((x) => x !== src)])}>Make main</button> : <span />}
-                  <button type="button" className="font-semibold text-tomato-600" onClick={() => setImages((im) => im.filter((x) => x !== src))}>Remove</button>
+                  {i > 0 ? <button type="button" className="font-semibold text-brand-700" onClick={() => setImages((im) => [src, ...im.filter((x) => x !== src)])}>{t("Make main", "প্রধান করুন")}</button> : <span />}
+                  <button type="button" className="font-semibold text-tomato-600" onClick={() => setImages((im) => im.filter((x) => x !== src))}>{t("Remove", "মুছুন")}</button>
                 </div>
               </li>
             ))}
             {images.length < 8 && (
               <li>
                 <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="grid aspect-square w-full place-items-center rounded-xl border-2 border-dashed border-line text-ink-400 hover:border-brand-600 hover:text-brand-700">
-                  {uploading ? <Loader2 className="size-6 animate-spin" /> : <span className="flex flex-col items-center gap-1 text-xs font-semibold"><ImagePlus className="size-6" />Upload</span>}
+                  {uploading ? <Loader2 className="size-6 animate-spin" /> : <span className="flex flex-col items-center gap-1 text-xs font-semibold"><ImagePlus className="size-6" />{t("Upload", "আপলোড")}</span>}
                 </button>
               </li>
             )}
@@ -129,7 +132,7 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
             type="file"
             accept="image/jpeg,image/png,image/webp,image/avif"
             className="sr-only"
-            aria-label="Upload product image"
+            aria-label={t("Upload product image", "পণ্যের ছবি আপলোড করুন")}
             onChange={(ev) => {
               const f = ev.target.files?.[0];
               ev.target.value = "";
@@ -144,35 +147,35 @@ export function ProductForm({ initial, categories, currency }: { initial: Produc
               });
             }}
           />
-          {uploadError && <Alert tone="error">{uploadError}</Alert>}
+          {uploadError && <Alert tone="error">{st({ message: uploadError })?.message}</Alert>}
           <div className="flex gap-2">
-            <Input value={urlInput} onChange={(ev) => setUrlInput(ev.target.value)} placeholder="…or paste an https:// image URL" aria-label="Image URL" />
-            <Button type="button" variant="secondary" onClick={() => { if (/^https:\/\/|^\/images\//.test(urlInput) && images.length < 8) { setImages((im) => [...im, urlInput]); setUrlInput(""); } }}>Add</Button>
+            <Input value={urlInput} onChange={(ev) => setUrlInput(ev.target.value)} placeholder={t("…or paste an https:// image link", "…অথবা https:// ছবির লিংক দিন")} aria-label={t("Image URL", "ছবির লিংক")} />
+            <Button type="button" variant="secondary" onClick={() => { if (/^https:\/\/|^\/images\//.test(urlInput) && images.length < 8) { setImages((im) => [...im, urlInput]); setUrlInput(""); } }}>{t("Add", "যোগ করুন")}</Button>
           </div>
-          <p className="text-xs text-ink-600">JPEG, PNG, WebP or AVIF. Big phone photos are shrunk automatically before upload. Square photos look best.</p>
+          <p className="text-xs text-ink-600">{t("JPEG, PNG, WebP or AVIF. Big phone photos are shrunk automatically before upload. Square photos look best.", "JPEG, PNG, WebP বা AVIF। মোবাইলের বড় ছবি আপলোডের আগে নিজে থেকেই ছোট হয়ে যাবে। চারকোনা (square) ছবি সবচেয়ে সুন্দর দেখায়।")}</p>
         </Card>
       </div>
 
       <div className="space-y-6">
         <Card className="space-y-4 p-6">
-          <h2 className="font-semibold">Organisation</h2>
-          <Field label="Category" htmlFor="categoryId" error={e.categoryId}>
+          <h2 className="font-semibold">{t("Category & visibility", "ক্যাটাগরি ও দেখানো")}</h2>
+          <Field label={t("Category", "ক্যাটাগরি")} htmlFor="categoryId" error={e.categoryId}>
             <Select id="categoryId" name="categoryId" defaultValue={initial.categoryId ?? ""}>
-              <option value="">— None —</option>
-              {categories.map((c) => <option key={c.id} value={c.id}>{c.parentId ? "↳ " : ""}{c.name}</option>)}
+              <option value="">{t("— None —", "— কোনোটি নয় —")}</option>
+              {categories.map((c) => <option key={c.id} value={c.id}>{c.parentId ? "↳ " : ""}{lang === "bn" && c.nameBn ? c.nameBn : c.name}</option>)}
             </Select>
           </Field>
-          <Field label="Selling unit" htmlFor="unit"><Select id="unit" name="unit" defaultValue={initial.unit}>{UNITS.map((u) => <option key={u}>{u}</option>)}</Select></Field>
+          <Field label={t("Selling unit", "বিক্রির একক")} htmlFor="unit"><Select id="unit" name="unit" defaultValue={initial.unit}>{UNITS.map((u) => <option key={u} value={u}>{unit(u)}</option>)}</Select></Field>
           <div className="space-y-2.5 pt-2">
-            <Checkbox name="isActive" label="Visible in store" defaultChecked={initial.isActive} />
-            <Checkbox name="isFeatured" label="Featured on homepage" defaultChecked={initial.isFeatured} />
-            <Checkbox name="isOrganic" label="Organic" defaultChecked={initial.isOrganic} />
-            <Checkbox name="isSeasonal" label="Seasonal" defaultChecked={initial.isSeasonal} />
+            <Checkbox name="isActive" label={t("Visible in store", "স্টোরে দেখাবে")} defaultChecked={initial.isActive} />
+            <Checkbox name="isFeatured" label={t("Featured on homepage", "হোমপেজে বিশেষভাবে দেখাবে")} defaultChecked={initial.isFeatured} />
+            <Checkbox name="isOrganic" label={t("Organic", "অর্গানিক")} defaultChecked={initial.isOrganic} />
+            <Checkbox name="isSeasonal" label={t("Seasonal", "মৌসুমি")} defaultChecked={initial.isSeasonal} />
           </div>
         </Card>
         <div className="flex gap-3">
-          <Button size="lg" className="flex-1" disabled={pending || uploading}>{pending ? "Saving…" : initial.id ? "Save changes" : "Create product"}</Button>
-          <ButtonLink href="/admin/products" variant="secondary" size="lg">Cancel</ButtonLink>
+          <Button size="lg" className="flex-1" disabled={pending || uploading}>{pending ? t("Saving…", "সংরক্ষণ হচ্ছে…") : initial.id ? t("Save changes", "পরিবর্তন সংরক্ষণ করুন") : t("Create product", "পণ্য তৈরি করুন")}</Button>
+          <ButtonLink href="/admin/products" variant="secondary" size="lg">{t("Cancel", "বাতিল")}</ButtonLink>
         </div>
       </div>
     </form>

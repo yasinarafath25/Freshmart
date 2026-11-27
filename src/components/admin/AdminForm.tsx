@@ -5,6 +5,7 @@ import type { AdminState } from "@/app/admin/actions";
 import { Alert, Button } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { keepValues } from "@/lib/utils/form";
+import { useI18n } from "@/lib/i18n/client";
 
 const ErrorsCtx = createContext<Record<string, string>>({});
 /** Field-level error for the nearest AdminForm. */
@@ -21,7 +22,7 @@ export function FieldError({ name }: { name: string }) {
 export function AdminForm({
   action,
   children,
-  submitLabel = "Save",
+  submitLabel,
   className,
   resetOnSuccess,
 }: {
@@ -31,7 +32,9 @@ export function AdminForm({
   className?: string;
   resetOnSuccess?: boolean;
 }) {
-  const [state, formAction, pending] = useActionState<AdminState, FormData>(action, null);
+  const [raw, formAction, pending] = useActionState<AdminState, FormData>(action, null);
+  const { t, st } = useI18n();
+  const state = st(raw);
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (state?.ok && resetOnSuccess) ref.current?.reset();
@@ -41,8 +44,8 @@ export function AdminForm({
       <form ref={ref} action={formAction} onSubmit={keepValues(formAction)} className={cn("space-y-4", className)}>
         {children}
         {state?.message && <Alert tone={state.ok ? "success" : "error"}>{state.message}</Alert>}
-        {!state?.message && state?.errors && Object.keys(state.errors).length > 0 && <Alert tone="error">Please fix the highlighted fields.</Alert>}
-        <Button disabled={pending}>{pending ? "Saving…" : submitLabel}</Button>
+        {!state?.message && state?.errors && Object.keys(state.errors).length > 0 && <Alert tone="error">{t("Please fix the highlighted fields.", "চিহ্নিত ঘরগুলো ঠিক করুন।")}</Alert>}
+        <Button disabled={pending}>{pending ? t("Saving…", "সংরক্ষণ হচ্ছে…") : (submitLabel ?? t("Save", "সংরক্ষণ করুন"))}</Button>
       </form>
     </ErrorsCtx.Provider>
   );

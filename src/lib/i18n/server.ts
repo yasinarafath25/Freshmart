@@ -36,5 +36,7 @@ export const getI18n = cache(async () => {
     name: (o: Localized) => pick(lang, o.name, o.nameBn),
     pick: (en: string, bn?: string | null) => pick(lang, en, bn),
     msg: (text: string | null | undefined) => tMsg(text, lang),
+    /** Inline pair for admin/UI text: t("Orders", "অর্ডার"). */
+    t: (en: string, bn: string) => (lang === "bn" ? bn : en),
   };
 });

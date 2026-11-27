@@ -24,6 +24,8 @@ export function useI18n() {
       date: (v: Date | string, opts?: Intl.DateTimeFormatOptions) => fmtDate(v, lang, opts),
       /** Translate a server message / action state for display. */
       msg: (text: string | null | undefined) => tMsg(text, lang),
+      /** Inline pair for admin/UI text: t("Orders", "অর্ডার"). */
+      t: (en: string, bn: string) => (lang === "bn" ? bn : en),
       st: <T extends { message?: string; errors?: Record<string, string> } | null>(state: T) => tState(state, lang),
     }),
     [lang, currency],

@@ -99,6 +99,73 @@ const STATUS_BN: Record<string, string> = {
   Cancelled: "বাতিল",
 };
 
+
+/** Admin panel messages (actions, validation, media). Looked up after EXACT. */
+const ADMIN_EXACT: Record<string, string> = {
+  "A category can’t be its own parent.": "কোনো ক্যাটাগরি নিজের প্যারেন্ট হতে পারে না।",
+  "A role with this name exists.": "এই নামে আগে থেকেই একটি রোল আছে।",
+  "Add at least one delivery slot.": "অন্তত একটি ডেলিভারির সময় যোগ করুন।",
+  "Add at least one variant.": "অন্তত একটি ভ্যারিয়েন্ট (সাইজ/ওজন) যোগ করুন।",
+  "Another product already uses this URL slug.": "এই লিংক (slug) অন্য একটি পণ্যে ব্যবহার হচ্ছে।",
+  "Category saved.": "ক্যাটাগরি সংরক্ষণ হয়েছে।",
+  "Choose a category.": "একটি ক্যাটাগরি বাছাই করুন।",
+  "Choose a role.": "একটি রোল বাছাই করুন।",
+  "Choose a valid status.": "সঠিক অবস্থা বাছাই করুন।",
+  "Coupon saved.": "কুপন সংরক্ষণ হয়েছে।",
+  "Delivery area saved.": "ডেলিভারি এলাকা সংরক্ষণ হয়েছে।",
+  "Each variant needs a unique SKU.": "প্রতিটি ভ্যারিয়েন্টের আলাদা SKU লাগবে।",
+  "End must be after start.": "শেষের সময় শুরুর পরে হতে হবে।",
+  "Enter a non-zero amount.": "শূন্য ছাড়া একটি সংখ্যা দিন।",
+  "Enter the discount amount.": "ছাড়ের পরিমাণ দিন।",
+  "Invalid dates.": "তারিখ সঠিক নয়।",
+  "Invalid form data.": "ফর্মের তথ্য সঠিক নয়।",
+  "Invalid image URL.": "ছবির লিংক সঠিক নয়।",
+  "Invalid order.": "অর্ডার সঠিক নয়।",
+  "Must be 0 or more.": "০ বা তার বেশি হতে হবে।",
+  "Name is required.": "নাম দিতে হবে।",
+  "No chats found. Send any message (e.g. “hi”) to your bot in Telegram, then try again.": "কোনো চ্যাট পাওয়া যায়নি। টেলিগ্রামে আপনার বটকে যেকোনো মেসেজ (যেমন “hi”) পাঠিয়ে আবার চেষ্টা করুন।",
+  "No file uploaded.": "কোনো ফাইল আপলোড হয়নি।",
+  "Not allowed.": "অনুমতি নেই।",
+  "Order updated.": "অর্ডার আপডেট হয়েছে।",
+  "Payment recorded.": "পেমেন্ট জমা হিসেবে রাখা হয়েছে।",
+  "Percentage must be between 1 and 100.": "শতাংশ ১ থেকে ১০০-এর মধ্যে হতে হবে।",
+  "Product not found.": "পণ্য পাওয়া যায়নি।",
+  "Role not found.": "রোল পাওয়া যায়নি।",
+  "Role saved.": "রোল সংরক্ষণ হয়েছে।",
+  "SKU is required.": "SKU দিতে হবে।",
+  "Settings saved.": "সেটিংস সংরক্ষণ হয়েছে।",
+  "Slug already in use.": "এই লিংক (slug) আগে থেকেই ব্যবহার হচ্ছে।",
+  "Slug is required.": "লিংক (slug) দিতে হবে।",
+  "Staff user saved.": "স্টাফ সংরক্ষণ হয়েছে।",
+  "Stock can’t go below zero.": "স্টক শূন্যের নিচে যেতে পারে না।",
+  "TELEGRAM_BOT_TOKEN is not set yet (see the steps below).": "TELEGRAM_BOT_TOKEN এখনো দেওয়া হয়নি (নিচের ধাপগুলো দেখুন)।",
+  "TELEGRAM_CHAT_ID is not set yet. Use “Find my chat ID” first.": "TELEGRAM_CHAT_ID এখনো দেওয়া হয়নি। আগে “চ্যাট আইডি খুঁজুন” চাপুন।",
+  "Test message sent — check Telegram.": "টেস্ট মেসেজ পাঠানো হয়েছে, টেলিগ্রাম দেখুন।",
+  "The Super Admin role can’t be edited.": "সুপার অ্যাডমিন রোল বদলানো যায় না।",
+  "This code already exists.": "এই কোড আগে থেকেই আছে।",
+  "This person is already a staff member.": "এই ব্যক্তি আগে থেকেই স্টাফ।",
+  "Too large.": "অনেক বড়।",
+  "Variant name is required.": "ভ্যারিয়েন্টের নাম দিতে হবে।",
+  "You can’t remove your own Super Admin role.": "নিজের সুপার অ্যাডমিন রোল সরানো যায় না।",
+  "You don’t have permission to do this.": "এই কাজের অনুমতি আপনার নেই।",
+  "Empty file.": "ফাইলটি খালি।",
+  "Image must be 5 MB or smaller.": "ছবি ৫ MB বা তার ছোট হতে হবে।",
+  "Only JPEG, PNG, WebP or AVIF images are allowed.": "শুধু JPEG, PNG, WebP বা AVIF ছবি দেওয়া যাবে।",
+  "Only cash-on-delivery orders can be marked paid manually.": "শুধু ক্যাশ অন ডেলিভারি অর্ডার হাতে পরিশোধিত করা যায়।",
+  "Order is already paid.": "অর্ডারটি আগেই পরিশোধিত।",
+  "Order is cancelled.": "অর্ডারটি বাতিল।",
+  "Order not found.": "অর্ডার পাওয়া যায়নি।",
+  "Upload failed.": "আপলোড হয়নি।",
+};
+
+const ADMIN_RULES: [RegExp, (...m: string[]) => string][] = [
+  [/^SKU (.+) is already used by another product\.$/, (s) => `SKU ${s} অন্য একটি পণ্যে ব্যবহার হচ্ছে।`],
+  [/^Stock updated to (-?\d+)\.$/, (n) => `স্টক এখন ${n}।`],
+  [/^Telegram error: (.+)$/, (e) => `টেলিগ্রাম সমস্যা: ${e}`],
+  [/^Variant (\d+): (.+)$/, (n, m) => `ভ্যারিয়েন্ট ${n}: ${ADMIN_EXACT[m] ?? m}`],
+  [/^Cannot move an order from (\S+) to (\S+)\.$/, () => "অর্ডারটি এই অবস্থায় নেওয়া যায় না।"],
+];
+
 const RULES: [RegExp, (...m: string[]) => string][] = [
   [/^Minimum order of (.+) required for this coupon\.$/, (a) => `এই কুপনের জন্য সর্বনিম্ন ${a}-এর অর্ডার লাগবে।`],
   [/^Minimum order value is (.+)\.$/, (a) => `সর্বনিম্ন অর্ডার ${a}।`],
@@ -130,9 +197,9 @@ function issueBn(issue: string) {
 export function tMsg(text: string | null | undefined, lang: Lang): string {
   if (!text) return "";
   if (lang !== "bn") return text;
-  const exact = EXACT[text];
+  const exact = EXACT[text] ?? ADMIN_EXACT[text];
   if (exact) return exact;
-  for (const [re, fn] of RULES) {
+  for (const [re, fn] of [...RULES, ...ADMIN_RULES]) {
     const m = text.match(re);
     if (m) return bnDigitsExceptCodes(fn(...m.slice(1)));
   }
