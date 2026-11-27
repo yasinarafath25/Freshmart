@@ -47,8 +47,8 @@ Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so n
 ### 3.1 One-time setup
 
 1. **Database (Neon, free):** create a project at neon.tech → copy the connection string (it looks like `postgresql://user:pass@ep-…neon.tech/neondb?sslmode=require`).
-2. **Cloudflare account:** sign up at dash.cloudflare.com → *Workers & Pages* once, so you get a `*.workers.dev` subdomain. Note your **Account ID** (right sidebar of the dashboard).
-3. **Cloudflare API token:** *My Profile → API Tokens → Create Token → "Edit Cloudflare Workers"* template → create → copy it.
+2. **Cloudflare account:** use the **same Cloudflare account that already holds `ninestarbd.com`**. Open *Workers & Pages* once, and note your **Account ID** (right sidebar of the dashboard).
+3. **Cloudflare API token:** *My Profile → API Tokens → Create Token → "Edit Cloudflare Workers"* template → under *Zone Resources* choose **Specific zone → ninestarbd.com** → create → copy it. (If the deploy log says it is not allowed to add the domain, edit the token and add *Zone → DNS → Edit*.)
 4. **GitHub secrets:** repository → *Settings → Secrets and variables → Actions → New repository secret*:
 
 | Secret | Value |
@@ -56,7 +56,7 @@ Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so n
 | `CLOUDFLARE_API_TOKEN` | token from step 3 |
 | `CLOUDFLARE_ACCOUNT_ID` | account id from step 2 |
 | `DATABASE_URL` | Neon connection string from step 1 |
-| `APP_URL` | `https://freshmart.<your-subdomain>.workers.dev` (or your own domain later) |
+| `APP_URL` | `https://freshmart.ninestarbd.com` |
 | `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | optional — creates your first Super Admin on the first deploy |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | optional — order alerts on Telegram |
 | `RESEND_API_KEY`, `EMAIL_FROM` | optional — password-reset emails |
@@ -68,7 +68,7 @@ Deployment runs on GitHub's Linux servers (`.github/workflows/deploy.yml`), so n
 
 - **Photo uploads from the admin (R2):** enable R2 in the Cloudflare dashboard, run `npx wrangler r2 bucket create freshmart-media`, then uncomment the `r2_buckets` block in `wrangler.jsonc`. Until then, products use the bundled photos or pasted `https://` image links.
 - **Hyperdrive (faster DB connections):** `npx wrangler hyperdrive create freshmart-db --connection-string="…"`, then uncomment the `hyperdrive` block with the printed id.
-- **Custom domain:** Workers & Pages → freshmart → *Domains & Routes*; then update the `APP_URL` secret.
+- **Live address:** `freshmart.ninestarbd.com`, set in `routes` in `wrangler.jsonc`. Cloudflare creates the DNS record and HTTPS certificate on deploy, so don't add the DNS record by hand. To use a different subdomain, change it there **and** in the `APP_URL` secret. (`shop.ninestarbd.com` is already used by another site.)
 
 ### 3.3 Environment variable checklist
 
