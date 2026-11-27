@@ -28,6 +28,14 @@ const ROLES = [
     description: "Fulfils orders and updates stock",
     permissions: ["dashboard:read", "inventory:write", "orders:write", "customers:read", "reviews:write"],
   },
+  {
+    // For a public portfolio demo login: can try the shop tools, but can't see customers or change settings, staff or roles.
+    name: "Demo",
+    description: "Portfolio demo — no customers, settings, staff or roles",
+    permissions: [
+      "dashboard:read", "products:write", "inventory:write", "orders:write", "coupons:write", "delivery:write", "payments:read", "reviews:write", "reports:read",
+    ],
+  },
 ];
 
 const CATEGORIES = [

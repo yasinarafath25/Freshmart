@@ -13,3 +13,6 @@ next-env.d.ts
 # Personal notes with passwords — never commit
 freshmart-chabi/
 *chabi*
+
+# Material for the Nine Star portfolio entry (not part of the app)
+nine-star-listing/
